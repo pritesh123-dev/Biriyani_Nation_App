@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BiriyaniNation Kitchen</title>
+<style>
+  :root{
+    --bg:#0B0906; --surface:#100C07; --card:#1A140D; --well:#241C12;
+    --gold:#E3AE4E; --goldSoft:#F3D79B; --onGold:#241905;
+    --cream:#F6EEE1; --veg:#4E9A6B; --red:#C0453A;
+    --hair:rgba(246,238,225,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--cream);
+    font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    padding:24px; max-width:1080px; margin:0 auto;
+  }
+  h1{font-size:26px;font-weight:600;letter-spacing:.3px}
+  h1 span{color:var(--gold)}
+  h2{font-size:15px;text-transform:uppercase;letter-spacing:.12em;color:rgba(246,238,225,.5);margin:28px 0 12px;font-weight:600}
+  .card{background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:18px;margin-bottom:14px}
+  label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:rgba(246,238,225,.45);margin-bottom:6px;font-weight:600}
+  input,textarea,select{
+    width:100%;background:var(--well);border:1px solid var(--hair);border-radius:9px;
+    padding:10px 12px;color:var(--cream);font:inherit;font-size:14px;
+  }
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--gold)}
+  input[type=checkbox]{width:auto;accent-color:var(--gold)}
+  button{
+    background:var(--gold);color:var(--onGold);border:0;border-radius:10px;
+    padding:11px 18px;font:inherit;font-weight:700;cursor:pointer;
+  }
+  button:hover{filter:brightness(1.08)}
+  button.ghost{background:transparent;color:var(--goldSoft);border:1px solid rgba(227,174,78,.45)}
+  button.danger{background:transparent;color:var(--red);border:1px solid rgba(192,69,58,.45)}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+  .row>*{flex:1;min-width:130px}
+  .row>.narrow{flex:0 0 110px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+  .tabs{display:flex;gap:8px;margin:18px 0}
+  .tabs button{background:transparent;color:rgba(246,238,225,.6);border:1px solid var(--hair)}
+  .tabs button.on{background:rgba(227,174,78,.16);color:var(--goldSoft);border-color:rgba(227,174,78,.5)}
+  .pill{display:inline-block;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700}
+  .pill.placed{background:rgba(227,174,78,.16);color:var(--goldSoft)}
+  .pill.cooking{background:rgba(227,174,78,.28);color:var(--goldSoft)}
+  .pill.ready{background:rgba(78,154,107,.2);color:#8FD3A6}
+  .pill.collected{background:rgba(246,238,225,.08);color:rgba(246,238,225,.5)}
+  .pill.cancelled{background:rgba(192,69,58,.18);color:#E2857B}
+  .muted{color:rgba(246,238,225,.45);font-size:13px}
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translateX(-50%);
+    background:var(--card);border:1px solid rgba(227,174,78,.5);color:var(--goldSoft);
+    padding:12px 22px;border-radius:11px;font-weight:600;z-index:99;
+  }
+  code{background:var(--well);padding:2px 6px;border-radius:5px;font-size:13px}
+  hr{border:0;border-top:1px solid var(--hair);margin:14px 0}
+  .dish{border-left:3px solid var(--gold)}
+  .dish.veg{border-left-color:var(--veg)}
+  .dish.off{opacity:.5}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  td,th{text-align:left;padding:9px 6px;border-bottom:1px solid var(--hair)}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:rgba(246,238,225,.45)}
+</style>
+</head>
+<body>
+
+<h1>Biriyani<span>Nation</span> · Kitchen</h1>
+<p class="muted" style="margin-top:6px">Change prices, dishes and photos here. The app picks them up on next launch — no new build.</p>
+
+<!-- Sign in -->
+<div class="card" id="signin">
+  <h2 style="margin-top:0">Sign in</h2>
+  <div class="row">
+    <div>
+      <label>API base URL</label>
+      <input id="apiUrl" placeholder="https://xxxx.execute-api.ap-south-1.amazonaws.com/prod">
+    </div>
+    <div class="narrow">
+      <label>Mobile</label>
+      <input id="adminPhone" placeholder="9876543210" inputmode="numeric">
+    </div>
+    <div class="narrow"><button id="sendOtp">Send code</button></div>
+  </div>
+  <div class="row" id="otpRow" style="display:none;margin-top:12px">
+    <div class="narrow">
+      <label>6-digit code</label>
+      <input id="otpCode" inputmode="numeric" maxlength="6">
+    </div>
+    <div class="narrow"><button id="verifyOtp">Verify</button></div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+  <div class="tabs">
+    <button data-tab="orders" class="on">Orders</button>
+    <button data-tab="menu">Menu &amp; prices</button>
+    <button data-tab="store">Store</button>
+    <button data-tab="customers">Customers</button>
+  </div>
+
+  <!-- Orders -->
+  <section id="tab-orders">
+    <div class="row" style="margin-bottom:14px">
+      <div class="narrow"><label>Day</label><input type="date" id="orderDay"></div>
+      <div class="narrow"><button id="loadOrders">Refresh</button></div>
+      <div style="text-align:right"><span class="muted" id="orderSummary"></span></div>
+    </div>
+    <div id="ordersList"></div>
+  </section>
+
+  <!-- Menu -->
+  <section id="tab-menu" style="display:none">
+    <div class="row" style="margin-bottom:14px">
+      <div><button id="addDish" class="ghost">+ Add dish</button></div>
+      <div style="text-align:right"><button id="saveMenu">Save all changes</button></div>
+    </div>
+    <div id="dishList"></div>
+
+    <h2>Add-ons</h2>
+    <div id="addonList" class="grid"></div>
+    <button id="addAddon" class="ghost" style="margin-top:10px">+ Add add-on</button>
+
+    <h2>Pricing rules</h2>
+    <div class="card">
+      <div class="row">
+        <div><label>Tax %</label><input id="taxPercent" type="number" step="0.5"></div>
+        <div><label>Packaging fee ₹</label><input id="packagingFee" type="number"></div>
+        <div><label>Coins per ₹1</label><input id="coinsPerRupee" type="number" step="0.01"></div>
+        <div><label>Coins for free Mini</label><input id="coinsForFreeMini" type="number"></div>
+        <div><label>Min order ₹</label><input id="minOrder" type="number"></div>
+      </div>
+      <hr>
+      <div class="row">
+        <div><label>Promo code</label><input id="promoCode"></div>
+        <div><label>Amount off ₹</label><input id="promoOff" type="number"></div>
+        <div><label>Min subtotal ₹</label><input id="promoMin" type="number"></div>
+        <div class="narrow"><label>Active</label><input id="promoActive" type="checkbox"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Store -->
+  <section id="tab-store" style="display:none">
+    <div class="card">
+      <h2 style="margin-top:0">Counter</h2>
+      <div class="row">
+        <div><label>Store name</label><input id="storeName"></div>
+        <div><label>Phone</label><input id="storePhone"></div>
+        <div><label>WhatsApp</label><input id="storeWhatsapp"></div>
+        <div><label>FSSAI licence no.</label><input id="fssai"></div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <div><label>Address line 1</label><input id="addr1"></div>
+        <div><label>Address line 2</label><input id="addr2"></div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <div><label>Google Maps URL</label><input id="mapsUrl"></div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <div class="narrow"><label>Opens</label><input id="openTime" type="time"></div>
+        <div class="narrow"><label>Closes</label><input id="closeTime" type="time"></div>
+        <div class="narrow"><label>Prep minutes</label><input id="prepMinutes" type="number"></div>
+        <div class="narrow"><label>Taking orders</label><input id="acceptingOrders" type="checkbox"></div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <div><label>Message when closed</label><input id="closedMessage"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0">Brand</h2>
+      <div class="row">
+        <div><label>App name</label><input id="brandName"></div>
+        <div><label>Established line</label><input id="brandEst"></div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <div><label>Tagline</label><input id="brandTagline"></div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <div><label>Hero image URL</label><input id="brandHero" placeholder="https://… or an S3 key"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0">Payments</h2>
+      <div class="row">
+        <div class="narrow"><label>Pay at counter</label><input id="payCounter" type="checkbox"></div>
+        <div class="narrow"><label>UPI</label><input id="payUpi" type="checkbox"></div>
+        <div><label>UPI ID</label><input id="upiId"></div>
+        <div><label>UPI payee name</label><input id="upiName"></div>
+      </div>
+    </div>
+
+    <button id="saveStore">Save store settings</button>
+  </section>
+
+  <!-- Customers -->
+  <section id="tab-customers" style="display:none">
+    <div class="row" style="margin-bottom:14px">
+      <div class="narrow"><label>Registered on</label><input type="date" id="custDay"></div>
+      <div class="narrow"><button id="loadCustomers">Load</button></div>
+      <div class="narrow"><button id="exportCustomers" class="ghost">Export CSV</button></div>
+    </div>
+    <div id="customerList"></div>
+  </section>
+</div>
+
+<script>
+// ─────────────────────────── state ───────────────────────────
+const $ = (id) => document.getElementById(id);
+let API = localStorage.getItem('bn.api') || '';
+let TOKEN = localStorage.getItem('bn.token') || '';
+let CONFIG = null;
+let CUSTOMERS = [];
+
+$('apiUrl').value = API;
+
+function toast(msg, bad) {
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  if (bad) { el.style.borderColor = 'rgba(192,69,58,.6)'; el.style.color = '#E2857B'; }
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2600);
+}
+
+async function call(path, opts = {}) {
+  const res = await fetch(API + path, {
+    method: opts.method || 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(TOKEN ? { Authorization: 'Bearer ' + TOKEN } : {}),
+    },
+    body: opts.body ? JSON.stringify(opts.body) : undefined,
+  });
+  const text = await res.text();
+  let data = null;
+  try { data = text ? JSON.parse(text) : null; } catch {}
+  if (!res.ok) throw new Error(data?.error || ('HTTP ' + res.status));
+  return data;
+}
+
+// ─────────────────────────── sign in ───────────────────────────
+$('sendOtp').onclick = async () => {
+  API = $('apiUrl').value.trim().replace(/\/+$/, '');
+  if (!API) return toast('Enter the API URL', true);
+  localStorage.setItem('bn.api', API);
+  try {
+    await call('/auth/request-otp', { method: 'POST', body: { phone: $('adminPhone').value } });
+    $('otpRow').style.display = 'flex';
+    toast('Code sent');
+  } catch (e) { toast(e.message, true); }
+};
+
+$('verifyOtp').onclick = async () => {
+  try {
+    const r = await call('/auth/verify-otp', {
+      method: 'POST',
+      body: { phone: $('adminPhone').value, code: $('otpCode').value },
+    });
+    if (!r.admin) return toast('That number is not a kitchen admin', true);
+    TOKEN = r.token;
+    localStorage.setItem('bn.token', TOKEN);
+    await boot();
+  } catch (e) { toast(e.message, true); }
+};
+
+// ─────────────────────────── tabs ───────────────────────────
+document.querySelectorAll('.tabs button').forEach((b) => {
+  b.onclick = () => {
+    document.querySelectorAll('.tabs button').forEach((x) => x.classList.remove('on'));
+    b.classList.add('on');
+    ['orders','menu','store','customers'].forEach((t) => {
+      $('tab-' + t).style.display = t === b.dataset.tab ? 'block' : 'none';
+    });
+  };
+});
+
+// ─────────────────────────── boot ───────────────────────────
+async function boot() {
+  try {
+    CONFIG = await call('/config');
+    $('signin').style.display = 'none';
+    $('app').style.display = 'block';
+    const today = new Date().toISOString().slice(0, 10);
+    $('orderDay').value = today;
+    $('custDay').value = today;
+    renderStore();
+    renderMenu();
+    await loadOrders();
+  } catch (e) { toast(e.message, true); }
+}
+
+// ─────────────────────────── orders ───────────────────────────
+async function loadOrders() {
+  try {
+    const r = await call('/admin/orders?day=' + $('orderDay').value);
+    $('orderSummary').textContent = r.count + ' orders · ₹' + r.revenue + ' taken';
+    $('ordersList').innerHTML = r.orders.length
+      ? r.orders.map(orderCard).join('')
+      : '<p class="muted">No orders on this day yet.</p>';
+
+    document.querySelectorAll('[data-status]').forEach((btn) => {
+      btn.onclick = async () => {
+        try {
+          await call('/admin/orders/' + btn.dataset.id + '/status', {
+            method: 'POST', body: { status: btn.dataset.status },
+          });
+          toast('Marked ' + btn.dataset.status);
+          await loadOrders();
+        } catch (e) { toast(e.message, true); }
+      };
+    });
+  } catch (e) { toast(e.message, true); }
+}
+$('loadOrders').onclick = loadOrders;
+$('orderDay').onchange = loadOrders;
+
+function orderCard(o) {
+  const next = { placed:'cooking', cooking:'ready', ready:'collected' }[o.status];
+  const items = o.items.map((i) =>
+    `<li>${esc(i.name)} <b>×${i.qty}</b> <span class="muted">${esc(i.pack)}${i.addons.length ? ' · ' + i.addons.map(esc).join(', ') : ''}</span></li>`
+  ).join('');
+  return `<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:19px;font-weight:700">${esc(o.orderNumber)}
+          <span style="color:var(--gold);letter-spacing:3px;margin-left:8px">${esc(o.pickupCode)}</span>
+        </div>
+        <div class="muted" style="margin-top:3px">
+          ${esc(o.phone)} · ${new Date(o.createdAt).toLocaleTimeString('en-IN',{hour:'numeric',minute:'2-digit'})}
+          · ${o.paymentMethod === 'counter' ? 'pay at counter' : 'UPI'}
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:19px;font-weight:700;color:var(--goldSoft)">₹${o.total}</div>
+        <span class="pill ${o.status}">${o.status}</span>
+      </div>
+    </div>
+    <ul style="margin:12px 0 0 18px;line-height:1.7">${items}</ul>
+    ${o.note ? `<p class="muted" style="margin-top:8px;font-style:italic">Note: ${esc(o.note)}</p>` : ''}
+    <div style="margin-top:12px;display:flex;gap:8px">
+      ${next ? `<button data-id="${o.orderId}" data-status="${next}">Mark ${next}</button>` : ''}
+      ${o.status !== 'cancelled' && o.status !== 'collected'
+        ? `<button class="danger" data-id="${o.orderId}" data-status="cancelled">Cancel</button>` : ''}
+    </div>
+  </div>`;
+}
+
+// ─────────────────────────── menu ───────────────────────────
+function renderMenu() {
+  const p = CONFIG.pricing;
+  $('taxPercent').value = p.taxPercent;
+  $('packagingFee').value = p.packagingFee;
+  $('coinsPerRupee').value = p.coinsPerRupee;
+  $('coinsForFreeMini').value = p.coinsForFreeMini;
+  $('minOrder').value = p.minOrder;
+  $('promoCode').value = p.promo?.code || '';
+  $('promoOff').value = p.promo?.amountOff || 0;
+  $('promoMin').value = p.promo?.minSubtotal || 0;
+  $('promoActive').checked = !!p.promo?.active;
+
+  $('dishList').innerHTML = CONFIG.dishes.map(dishCard).join('');
+  $('addonList').innerHTML = CONFIG.addons.map(addonCard).join('');
+
+  document.querySelectorAll('[data-del-dish]').forEach((b) => {
+    b.onclick = () => {
+      if (!confirm('Remove this dish from the menu?')) return;
+      CONFIG.dishes.splice(+b.dataset.delDish, 1);
+      renderMenu();
+    };
+  });
+  document.querySelectorAll('[data-del-addon]').forEach((b) => {
+    b.onclick = () => { CONFIG.addons.splice(+b.dataset.delAddon, 1); renderMenu(); };
+  });
+}
+
+function dishCard(d, i) {
+  const packs = d.packs.map((p, j) => `
+    <div class="row" style="margin-top:8px">
+      <div><label>Pack label</label><input data-d="${i}" data-p="${j}" data-f="label" value="${esc(p.label)}"></div>
+      <div><label>Serves</label><input data-d="${i}" data-p="${j}" data-f="serves" value="${esc(p.serves)}"></div>
+      <div><label>Weight</label><input data-d="${i}" data-p="${j}" data-f="grams" value="${esc(p.grams)}"></div>
+      <div class="narrow"><label>Price ₹</label><input type="number" data-d="${i}" data-p="${j}" data-f="price" value="${p.price}"></div>
+    </div>`).join('');
+
+  return `<div class="card dish ${d.veg ? 'veg' : ''} ${d.available ? '' : 'off'}">
+    <div class="row">
+      <div><label>Dish name</label><input data-d="${i}" data-f="name" value="${esc(d.name)}"></div>
+      <div class="narrow"><label>Veg</label><input type="checkbox" data-d="${i}" data-f="veg" ${d.veg ? 'checked' : ''}></div>
+      <div class="narrow"><label>Available</label><input type="checkbox" data-d="${i}" data-f="available" ${d.available ? 'checked' : ''}></div>
+      <div class="narrow"><label>Bestseller</label><input type="checkbox" data-d="${i}" data-f="bestseller" ${d.bestseller ? 'checked' : ''}></div>
+      <div class="narrow"><label>Rating</label><input type="number" step="0.1" data-d="${i}" data-f="rating" value="${d.rating ?? ''}"></div>
+      <div class="narrow"><label>Sort</label><input type="number" data-d="${i}" data-f="sort" value="${d.sort}"></div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div><label>Short line (menu list)</label><input data-d="${i}" data-f="short" value="${esc(d.short)}"></div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div><label>Full description</label><textarea rows="2" data-d="${i}" data-f="desc">${esc(d.desc)}</textarea></div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div><label>Photo URL or S3 key</label><input data-d="${i}" data-f="image" value="${esc(d.image || '')}" placeholder="dishes/chicken.jpg"></div>
+    </div>
+    ${packs}
+    <div style="margin-top:12px"><button class="danger" data-del-dish="${i}">Remove dish</button></div>
+  </div>`;
+}
+
+function addonCard(a, i) {
+  return `<div class="card">
+    <div class="row">
+      <div><label>Add-on</label><input data-a="${i}" data-f="name" value="${esc(a.name)}"></div>
+      <div class="narrow"><label>₹</label><input type="number" data-a="${i}" data-f="price" value="${a.price}"></div>
+      <div class="narrow"><label>On</label><input type="checkbox" data-a="${i}" data-f="available" ${a.available ? 'checked' : ''}></div>
+      <div class="narrow"><button class="danger" data-del-addon="${i}">×</button></div>
+    </div>
+  </div>`;
+}
+
+$('addDish').onclick = () => {
+  const id = prompt('Short id for this dish (letters and dashes, e.g. veg-hyderabadi)');
+  if (!id) return;
+  if (CONFIG.dishes.some((d) => d.id === id)) return toast('That id already exists', true);
+  CONFIG.dishes.push({
+    id, name: 'New biriyani', veg: false, available: true, sort: CONFIG.dishes.length + 1,
+    short: '', desc: '', image: '',
+    packs: [
+      { id: 'mini', label: 'Mini', serves: 'Serves 1', grams: '450 g', price: 199 },
+      { id: 'regular', label: 'Regular', serves: 'Serves 2', grams: '800 g', price: 299 },
+      { id: 'family', label: 'Family Pack', serves: 'Serves 4–5', grams: '1.8 kg', price: 499 },
+    ],
+  });
+  renderMenu();
+};
+
+$('addAddon').onclick = () => {
+  const id = prompt('Short id for this add-on (e.g. gulab-jamun)');
+  if (!id) return;
+  CONFIG.addons.push({ id, name: 'New add-on', price: 49, available: true });
+  renderMenu();
+};
+
+function collectMenu() {
+  document.querySelectorAll('#dishList [data-d]').forEach((el) => {
+    const d = CONFIG.dishes[+el.dataset.d];
+    if (!d) return;
+    const val = el.type === 'checkbox' ? el.checked
+      : el.type === 'number' ? (el.value === '' ? undefined : Number(el.value))
+      : el.value;
+    if (el.dataset.p !== undefined) d.packs[+el.dataset.p][el.dataset.f] = val;
+    else d[el.dataset.f] = val;
+  });
+  document.querySelectorAll('#addonList [data-a]').forEach((el) => {
+    const a = CONFIG.addons[+el.dataset.a];
+    if (!a) return;
+    a[el.dataset.f] = el.type === 'checkbox' ? el.checked
+      : el.type === 'number' ? Number(el.value) : el.value;
+  });
+  CONFIG.pricing = {
+    taxPercent: Number($('taxPercent').value),
+    packagingFee: Number($('packagingFee').value),
+    coinsPerRupee: Number($('coinsPerRupee').value),
+    coinsForFreeMini: Number($('coinsForFreeMini').value),
+    minOrder: Number($('minOrder').value),
+    promo: $('promoCode').value ? {
+      code: $('promoCode').value.trim().toUpperCase(),
+      amountOff: Number($('promoOff').value),
+      minSubtotal: Number($('promoMin').value),
+      active: $('promoActive').checked,
+    } : null,
+  };
+}
+
+$('saveMenu').onclick = async () => {
+  collectMenu();
+  await save();
+};
+
+// ─────────────────────────── store ───────────────────────────
+function renderStore() {
+  const s = CONFIG.store, b = CONFIG.brand, p = CONFIG.payments;
+  $('storeName').value = s.name; $('storePhone').value = s.phone;
+  $('storeWhatsapp').value = s.whatsapp; $('fssai').value = s.fssai || '';
+  $('addr1').value = s.addressLine1; $('addr2').value = s.addressLine2;
+  $('mapsUrl').value = s.mapsUrl;
+  $('openTime').value = s.openTime; $('closeTime').value = s.closeTime;
+  $('prepMinutes').value = s.prepMinutes;
+  $('acceptingOrders').checked = s.acceptingOrders;
+  $('closedMessage').value = s.closedMessage;
+  $('brandName').value = b.name; $('brandEst').value = b.established;
+  $('brandTagline').value = b.tagline; $('brandHero').value = b.heroImage || '';
+  $('payCounter').checked = p.payAtCounter; $('payUpi').checked = p.upi;
+  $('upiId').value = p.upiId; $('upiName').value = p.upiPayeeName;
+}
+
+$('saveStore').onclick = async () => {
+  CONFIG.store = {
+    ...CONFIG.store,
+    name: $('storeName').value, phone: $('storePhone').value,
+    whatsapp: $('storeWhatsapp').value, fssai: $('fssai').value,
+    addressLine1: $('addr1').value, addressLine2: $('addr2').value,
+    mapsUrl: $('mapsUrl').value,
+    openTime: $('openTime').value, closeTime: $('closeTime').value,
+    prepMinutes: Number($('prepMinutes').value),
+    acceptingOrders: $('acceptingOrders').checked,
+    closedMessage: $('closedMessage').value,
+  };
+  CONFIG.brand = {
+    ...CONFIG.brand,
+    name: $('brandName').value, established: $('brandEst').value,
+    tagline: $('brandTagline').value, heroImage: $('brandHero').value,
+  };
+  CONFIG.payments = {
+    payAtCounter: $('payCounter').checked, upi: $('payUpi').checked,
+    upiId: $('upiId').value, upiPayeeName: $('upiName').value,
+  };
+  await save();
+};
+
+async function save() {
+  try {
+    // Strip the server-computed fields before writing back.
+    const { openNow, ...body } = CONFIG;
+    const r = await call('/admin/config', { method: 'PUT', body });
+    CONFIG = { ...r.config, openNow };
+    toast('Saved — live in the app on next launch (v' + r.config.version + ')');
+  } catch (e) { toast(e.message, true); }
+}
+
+// ─────────────────────────── customers ───────────────────────────
+$('loadCustomers').onclick = async () => {
+  try {
+    const r = await call('/admin/customers?day=' + $('custDay').value);
+    CUSTOMERS = r.customers;
+    $('customerList').innerHTML = r.count === 0
+      ? '<p class="muted">Nobody registered on this day.</p>'
+      : `<p class="muted" style="margin-bottom:10px">${r.count} registered</p>
+        <table><tr><th>Phone</th><th>Name</th><th>Orders</th><th>Spent</th><th>Coins</th><th>Joined</th></tr>` +
+        r.customers.map((c) => `<tr>
+          <td>${esc(c.phone)}</td><td>${esc(c.displayName || '—')}</td>
+          <td>${c.orderCount}</td><td>₹${c.totalSpent}</td><td>${c.coins}</td>
+          <td>${new Date(c.createdAt).toLocaleDateString('en-IN')}</td>
+        </tr>`).join('') + '</table>';
+  } catch (e) { toast(e.message, true); }
+};
+
+$('exportCustomers').onclick = () => {
+  if (!CUSTOMERS.length) return toast('Load a day first', true);
+  const rows = [['phone','name','orders','totalSpent','coins','joined']]
+    .concat(CUSTOMERS.map((c) => [c.phone, c.displayName || '', c.orderCount, c.totalSpent, c.coins, c.createdAt]));
+  const csv = rows.map((r) => r.map((v) => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  a.download = `biriyaninnation-customers-${$('custDay').value}.csv`;
+  a.click();
+};
+
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) =>
+  ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
+
+// Resume a previous session.
+if (TOKEN && API) boot();
+</script>
+</body>
+</html>

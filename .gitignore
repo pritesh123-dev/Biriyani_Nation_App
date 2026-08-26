@@ -1,0 +1,12 @@
+node_modules/
+.aws-sam/
+.expo/
+dist/
+*.log
+.DS_Store
+samconfig.toml
+.seed-config.mjs
+.test-*.mjs
+play-service-account.json
+mobile/android/
+mobile/ios/

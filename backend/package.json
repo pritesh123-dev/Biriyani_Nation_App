@@ -1,0 +1,29 @@
+{
+  "name": "biriyani-nation-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pickup-only cloud kitchen backend on AWS Lambda",
+  "scripts": {
+    "build": "sam build",
+    "deploy": "sam build && sam deploy",
+    "deploy:guided": "sam build && sam deploy --guided",
+    "logs": "sam logs -n ApiFunction --stack-name biriyani-nation --tail",
+    "seed": "node scripts/seed.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "./run-tests.sh"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.658.0",
+    "@aws-sdk/client-s3": "^3.658.0",
+    "@aws-sdk/client-sns": "^3.658.0",
+    "@aws-sdk/client-ssm": "^3.658.0",
+    "@aws-sdk/lib-dynamodb": "^3.658.0",
+    "@aws-sdk/s3-request-presigner": "^3.658.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.145",
+    "@types/node": "^20.16.0",
+    "esbuild": "^0.23.1",
+    "typescript": "^5.6.2"
+  }
+}

@@ -1,0 +1,206 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: BiriyaniNation - pickup-only cloud kitchen backend (serverless, minimal cost)
+
+Parameters:
+  Stage:
+    Type: String
+    Default: prod
+    AllowedValues: [dev, prod]
+  OtpChannel:
+    Type: String
+    Default: whatsapp
+    AllowedValues: [whatsapp, sms, both]
+    Description: Default OTP delivery channel.
+  AdminPhones:
+    Type: String
+    Default: ''
+    Description: Comma-separated E.164 phones granted kitchen-admin rights (e.g. +919876543210).
+
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Architectures: [arm64]          # Graviton: ~20% cheaper than x86
+    MemorySize: 512
+    Timeout: 10
+    Tracing: Active
+    Environment:
+      Variables:
+        TABLE_NAME: !Ref AppTable
+        BUCKET_NAME: !Ref MediaBucket
+        MEDIA_BASE_URL: !Sub 'https://${MediaCdn.DomainName}'
+        STAGE: !Ref Stage
+        OTP_CHANNEL: !Ref OtpChannel
+        ADMIN_PHONES: !Ref AdminPhones
+        NODE_OPTIONS: '--enable-source-maps'
+  Api:
+    Cors:
+      AllowMethods: "'GET,POST,PUT,PATCH,DELETE,OPTIONS'"
+      AllowHeaders: "'Content-Type,Authorization'"
+      AllowOrigin: "'*'"
+
+Resources:
+
+  # ─────────────────────────── Data ───────────────────────────
+  # Single-table design. On-demand billing => you pay per request,
+  # nothing at idle. A kitchen doing 100 orders/day stays inside
+  # a couple of dollars a month.
+  AppTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'biriyani-nation-${Stage}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - { AttributeName: pk,   AttributeType: S }
+        - { AttributeName: sk,   AttributeType: S }
+        - { AttributeName: gsi1pk, AttributeType: S }
+        - { AttributeName: gsi1sk, AttributeType: S }
+      KeySchema:
+        - { AttributeName: pk, KeyType: HASH }
+        - { AttributeName: sk, KeyType: RANGE }
+      GlobalSecondaryIndexes:
+        # Kitchen dashboard: orders by day, newest first.
+        - IndexName: gsi1
+          KeySchema:
+            - { AttributeName: gsi1pk, KeyType: HASH }
+            - { AttributeName: gsi1sk, KeyType: RANGE }
+          Projection: { ProjectionType: ALL }
+      TimeToLiveSpecification:
+        AttributeName: ttl          # expires OTP challenges automatically, free
+        Enabled: true
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+
+  # ─────────────────────── Dish photos ────────────────────────
+  MediaBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'biriyani-nation-media-${Stage}-${AWS::AccountId}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      CorsConfiguration:
+        CorsRules:
+          - AllowedMethods: [GET, PUT]
+            AllowedOrigins: ['*']
+            AllowedHeaders: ['*']
+            MaxAge: 3000
+      LifecycleConfiguration:
+        Rules:
+          - Id: abort-incomplete-uploads
+            Status: Enabled
+            AbortIncompleteMultipartUpload: { DaysAfterInitiation: 1 }
+
+  MediaOac:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub 'biriyani-media-oac-${Stage}'
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  # CloudFront so dish photos are cached at the edge — the app hits
+  # S3 once per image per region, not once per customer.
+  MediaCdn:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        PriceClass: PriceClass_100     # NA + EU + IN edge; cheapest tier
+        DefaultCacheBehavior:
+          TargetOriginId: media-s3
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD, OPTIONS]
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6  # Managed-CachingOptimized
+          Compress: true
+        Origins:
+          - Id: media-s3
+            DomainName: !GetAtt MediaBucket.RegionalDomainName
+            OriginAccessControlId: !GetAtt MediaOac.Id
+            S3OriginConfig: { OriginAccessIdentity: '' }
+
+  MediaBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref MediaBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: { Service: cloudfront.amazonaws.com }
+            Action: s3:GetObject
+            Resource: !Sub '${MediaBucket.Arn}/*'
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${MediaCdn}'
+
+  # ─────────────────────────── API ────────────────────────────
+  # HTTP API, not REST API: $1.00 per million requests instead of $3.50.
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: !Ref Stage
+      Throttle:
+        BurstLimit: 200
+        RateLimit: 100
+      AccessLogSettings:
+        DestinationArn: !GetAtt ApiLogGroup.Arn
+        Format: '{"t":"$context.requestTime","m":"$context.httpMethod","p":"$context.path","s":"$context.status","err":"$context.error.message","lat":"$context.responseLatency"}'
+
+  ApiLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/http-api/biriyani-nation-${Stage}'
+      RetentionInDays: 14        # logs are the sneaky cost; cap them
+
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: node20
+        Sourcemap: true
+        EntryPoints: [src/handlers/api.ts]
+    Properties:
+      Handler: api.handler
+      CodeUri: ./
+      Description: All BiriyaniNation routes (single Lambda keeps cold starts and cost down)
+      Policies:
+        - DynamoDBCrudPolicy: { TableName: !Ref AppTable }
+        - S3CrudPolicy: { BucketName: !Sub 'biriyani-nation-media-${Stage}-${AWS::AccountId}' }
+        - Statement:
+            - Effect: Allow
+              Action: [ssm:GetParameter, ssm:GetParameters]
+              Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/biriyani-nation/${Stage}/*'
+            - Effect: Allow
+              Action: [sns:Publish]
+              Resource: '*'
+      Events:
+        Any:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /{proxy+}
+            Method: ANY
+
+  ApiFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${ApiFunction}'
+      RetentionInDays: 14
+
+Outputs:
+  ApiUrl:
+    Description: Base URL to put in the mobile app's EXPO_PUBLIC_API_URL
+    Value: !Sub 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}'
+  MediaUrl:
+    Description: CDN base URL for dish photos
+    Value: !Sub 'https://${MediaCdn.DomainName}'
+  TableName:
+    Value: !Ref AppTable
+  MediaBucket:
+    Value: !Ref MediaBucket
