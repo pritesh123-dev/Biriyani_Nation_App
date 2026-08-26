@@ -29,7 +29,6 @@ Everything you asked for, and the reasons where a choice was involved.
 | Location access screen | The app never asks for location; the permission is blocked in `app.json` |
 | Out-of-range screen | There is no range when the customer comes to you |
 | Live tracking (map, rider, ETA) | No rider to track |
-| Name field at sign-up | The number is the account |
 | Google sign-in | OTP only |
 
 **Replaced**
@@ -42,7 +41,10 @@ live and stops the moment it is collected or the app is backgrounded.
 
 **Added**
 
-- OTP sign-in over **WhatsApp or SMS**, pluggable per environment
+- OTP sign-in over **WhatsApp or SMS**, pluggable per environment. The
+  sign-up screen collects a name alongside the phone number (optional,
+  editable later from the profile page) so there's something to show
+  besides a number
 - **Remote config** — names, prices, photos, hours, promos, payment
   methods, all editable after launch with no rebuild
 - A **customer list** — every verified number becomes a customer record,

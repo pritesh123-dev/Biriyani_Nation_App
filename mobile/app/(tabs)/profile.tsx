@@ -1,13 +1,14 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import {
   View, Text, ScrollView, Pressable, RefreshControl, Alert, Linking,
+  Modal, TextInput, KeyboardAvoidingView, Platform,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router, useFocusEffect } from 'expo-router';
 
 import { useApp } from '../../src/lib/store';
-import { api } from '../../src/lib/api';
-import { Loading, CoinDot, Icon } from '../../src/components/ui';
+import { api, ApiError } from '../../src/lib/api';
+import { Loading, CoinDot, Icon, GoldButton, ErrorNote } from '../../src/components/ui';
 import { C, F, R, S, rupees } from '../../src/theme';
 
 interface OrderSummary {
@@ -21,6 +22,7 @@ export default function ProfileScreen() {
 
   const [orders, setOrders] = useState<OrderSummary[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [editingName, setEditingName] = useState(false);
 
   const loadOrders = useCallback(async () => {
     try {
@@ -97,8 +99,13 @@ export default function ProfileScreen() {
         />
       }
     >
-      {/* Identity — the phone number is the account. */}
-      <View style={[S.row, { gap: 15 }]}>
+      {/* Identity — the phone number is the account, the name is editable. */}
+      <Pressable
+        onPress={() => setEditingName(true)}
+        style={[S.row, { gap: 15 }]}
+        accessibilityRole="button"
+        accessibilityLabel="Edit your name"
+      >
         <View style={{
           width: 60, height: 60, borderRadius: 30,
           alignItems: 'center', justifyContent: 'center',
@@ -110,14 +117,24 @@ export default function ProfileScreen() {
           </Text>
         </View>
         <View style={{ flex: 1, gap: 3 }}>
-          <Text style={{ fontFamily: F.serif, fontSize: 25, color: C.text }}>
-            {user.displayName || 'Welcome back'}
-          </Text>
+          <View style={[S.row, { gap: 8 }]}>
+            <Text style={{ fontFamily: F.serif, fontSize: 25, color: C.text }}>
+              {user.displayName || 'Add your name'}
+            </Text>
+            <Text style={{ fontFamily: F.sans700, fontSize: 10.5, color: C.gold }}>Edit</Text>
+          </View>
           <Text style={{ fontFamily: F.sans600, fontSize: 11.5, color: C.text45 }}>
             {formatPhone(user.phone)} · {user.orderCount} order{user.orderCount === 1 ? '' : 's'}
           </Text>
         </View>
-      </View>
+      </Pressable>
+
+      <EditNameModal
+        visible={editingName}
+        initialName={user.displayName ?? ''}
+        onClose={() => setEditingName(false)}
+        onSaved={refreshUser}
+      />
 
       {/* Coins */}
       <View style={{
@@ -248,6 +265,71 @@ function SettingRow({
         {value}
       </Text>
     </Pressable>
+  );
+}
+
+function EditNameModal({
+  visible, initialName, onClose, onSaved,
+}: {
+  visible: boolean; initialName: string; onClose: () => void; onSaved: () => void;
+}) {
+  const [name, setName] = useState(initialName);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => { if (visible) { setName(initialName); setError(null); } }, [visible, initialName]);
+
+  const save = async () => {
+    const trimmed = name.trim();
+    if (!trimmed) { setError('Enter a name.'); return; }
+    setSaving(true);
+    setError(null);
+    try {
+      await api.updateMe({ displayName: trimmed });
+      await onSaved();
+      onClose();
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Could not save your name.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1, justifyContent: 'flex-end' }}
+      >
+        <Pressable
+          onPress={onClose}
+          style={{ ...S.screen, position: 'absolute', backgroundColor: 'rgba(0,0,0,0.6)' }}
+        />
+        <View style={{
+          padding: 22, paddingBottom: 34, gap: 14,
+          backgroundColor: C.surface, borderTopLeftRadius: R.xxl, borderTopRightRadius: R.xxl,
+          borderWidth: 1, borderColor: C.hair, borderBottomWidth: 0,
+        }}>
+          <Text style={{ fontFamily: F.serif, fontSize: 24, color: C.text }}>Your name</Text>
+          <TextInput
+            value={name}
+            onChangeText={setName}
+            placeholder="Ananya Mishra"
+            placeholderTextColor={C.text30}
+            autoFocus
+            returnKeyType="done"
+            onSubmitEditing={save}
+            style={{
+              height: 52, borderRadius: R.md, paddingHorizontal: 16,
+              backgroundColor: C.card, borderWidth: 1, borderColor: C.goldLine,
+              fontFamily: F.sans600, fontSize: 15, color: C.text,
+            }}
+          />
+          <ErrorNote message={error} />
+          <GoldButton label={saving ? 'Saving…' : 'Save'} onPress={save} loading={saving} height={52} />
+        </View>
+      </KeyboardAvoidingView>
+    </Modal>
   );
 }
 

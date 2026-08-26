@@ -15,19 +15,22 @@ import { C, F, R, S } from '../../src/theme';
 const HERO = require('../../assets/hero-biriyani.jpg');
 
 /**
- * Sign-in is one field: the mobile number. No name, no Google, no
- * password — the OTP both registers and authenticates, and the number is
- * the only identifier the kitchen ever needs.
+ * Sign-in is name + mobile number, no Google, no password — the OTP both
+ * registers and authenticates. Name is optional: a returning customer can
+ * leave it blank without it clobbering what they already have on file
+ * (the backend only ever fills a blank displayName, never overwrites one).
  */
 export default function PhoneScreen() {
   const { config } = useApp();
   const { height } = useWindowDimensions();
 
+  const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [channel, setChannel] = useState<'whatsapp' | 'sms'>('whatsapp');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const inputRef = useRef<TextInput>(null);
+  const nameRef = useRef<TextInput>(null);
+  const phoneRef = useRef<TextInput>(null);
 
   const digits = phone.replace(/\D/g, '');
   const valid = /^[6-9]\d{9}$/.test(digits);
@@ -42,6 +45,7 @@ export default function PhoneScreen() {
         pathname: '/(auth)/otp',
         params: {
           phone: digits,
+          name: name.trim(),
           channel: res.channel,
           resendIn: String(res.resendInSeconds ?? 30),
         },
@@ -51,7 +55,7 @@ export default function PhoneScreen() {
     } finally {
       setSending(false);
     }
-  }, [valid, sending, digits, channel]);
+  }, [valid, sending, digits, channel, name]);
 
   const heroHeight = Math.min(404, Math.max(280, height * 0.44));
   const brand = config?.brand;
@@ -108,10 +112,38 @@ export default function PhoneScreen() {
 
         {/* Form */}
         <View style={{ paddingHorizontal: 26, paddingTop: 10, paddingBottom: 34, gap: 14 }}>
+          <Text style={S.eyebrow}>Your name</Text>
+
+          <Pressable
+            onPress={() => nameRef.current?.focus()}
+            style={{
+              height: 52, borderRadius: R.md, paddingHorizontal: 16,
+              justifyContent: 'center',
+              backgroundColor: C.card,
+              borderWidth: 1, borderColor: C.goldLine,
+            }}
+          >
+            <TextInput
+              ref={nameRef}
+              value={name}
+              onChangeText={setName}
+              placeholder="Ananya Mishra"
+              placeholderTextColor={C.text30}
+              textContentType="name"
+              autoComplete="name"
+              returnKeyType="next"
+              onSubmitEditing={() => phoneRef.current?.focus()}
+              autoFocus
+              style={{
+                fontFamily: F.sans600, fontSize: 15, color: C.text, padding: 0,
+              }}
+            />
+          </Pressable>
+
           <Text style={S.eyebrow}>Mobile number</Text>
 
           <Pressable
-            onPress={() => inputRef.current?.focus()}
+            onPress={() => phoneRef.current?.focus()}
             style={{
               flexDirection: 'row', alignItems: 'center', gap: 10,
               height: 56, borderRadius: R.md, paddingHorizontal: 16,
@@ -123,7 +155,7 @@ export default function PhoneScreen() {
             <Text style={{ fontFamily: F.sans700, fontSize: 15, color: C.gold }}>+91</Text>
             <View style={{ width: 1, height: 22, backgroundColor: 'rgba(227,174,78,0.22)' }} />
             <TextInput
-              ref={inputRef}
+              ref={phoneRef}
               value={formatPhone(phone)}
               onChangeText={(t) => { setPhone(t.replace(/\D/g, '').slice(0, 10)); setError(null); }}
               placeholder="98765 43210"
@@ -134,7 +166,6 @@ export default function PhoneScreen() {
               maxLength={11}          // 10 digits + the space we insert
               returnKeyType="go"
               onSubmitEditing={submit}
-              autoFocus
               style={{
                 flex: 1, fontFamily: F.sans600, fontSize: 16,
                 color: C.text, letterSpacing: 1, padding: 0,

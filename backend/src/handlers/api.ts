@@ -193,9 +193,10 @@ async function handleRequestOtp(event: APIGatewayProxyEventV2) {
 }
 
 async function handleVerifyOtp(event: APIGatewayProxyEventV2) {
-  const body = parseBody<{ phone?: string; code?: string; referredBy?: string }>(event);
+  const body = parseBody<{ phone?: string; code?: string; referredBy?: string; name?: string }>(event);
   const phone = normalisePhone(body?.phone ?? '');
   const code  = String(body?.code ?? '').replace(/\D/g, '');
+  const name  = body?.name?.trim().slice(0, 60) || undefined;
 
   if (!phone) return badRequest('Enter a valid mobile number.');
   if (code.length !== 6) return badRequest('Enter the 6-digit code.');
@@ -229,7 +230,7 @@ async function handleVerifyOtp(event: APIGatewayProxyEventV2) {
   await deleteItem(K.otp(phone));
 
   const isAdmin = adminPhones().includes(phone);
-  const user = await upsertUser(phone, body?.referredBy);
+  const user = await upsertUser(phone, body?.referredBy, name);
   const token = await signToken(phone, isAdmin);
 
   return ok({ token, user: publicUser(user), admin: isAdmin });
@@ -256,12 +257,26 @@ interface UserRow {
  * Registering *is* verifying: the first successful OTP creates the
  * customer row. That row is the "list" of registered customers — query it
  * from /admin/customers or export it from DynamoDB.
+ *
+ * `name` comes from the sign-up screen. It only ever fills a blank —
+ * a returning customer who leaves the field empty (or whose keyboard
+ * autofilled something odd) never has an already-set name overwritten.
+ * Deliberate changes go through PATCH /me instead.
  */
-async function upsertUser(phone: string, referredBy?: string): Promise<UserRow> {
+async function upsertUser(phone: string, referredBy?: string, name?: string): Promise<UserRow> {
   const now = new Date().toISOString();
   const existing = await getItem<UserRow>(K.user(phone));
 
   if (existing) {
+    if (name && !existing.displayName) {
+      await ddb.send(new UpdateCommand({
+        TableName: TABLE,
+        Key: K.user(phone),
+        UpdateExpression: 'SET lastSeenAt = :now, displayName = :name',
+        ExpressionAttributeValues: { ':now': now, ':name': name },
+      }));
+      return { ...existing, lastSeenAt: now, displayName: name };
+    }
     await ddb.send(new UpdateCommand({
       TableName: TABLE,
       Key: K.user(phone),
@@ -274,6 +289,7 @@ async function upsertUser(phone: string, referredBy?: string): Promise<UserRow> 
   const row: UserRow = {
     ...K.user(phone),
     phone,
+    ...(name ? { displayName: name } : {}),
     coins: 0,
     orderCount: 0,
     totalSpent: 0,

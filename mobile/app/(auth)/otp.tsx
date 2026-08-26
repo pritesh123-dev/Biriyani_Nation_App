@@ -15,7 +15,7 @@ const CODE_LENGTH = 6;
 
 export default function OtpScreen() {
   const insets = useSafeAreaInsets();
-  const params = useLocalSearchParams<{ phone: string; channel: string; resendIn: string }>();
+  const params = useLocalSearchParams<{ phone: string; name?: string; channel: string; resendIn: string }>();
   const { signIn, refreshConfig } = useApp();
 
   const phone = params.phone ?? '';
@@ -44,7 +44,7 @@ export default function OtpScreen() {
     setError(null);
 
     try {
-      const res = await api.verifyOtp(phone, value);
+      const res = await api.verifyOtp(phone, value, params.name || undefined);
       await signIn(res.token, res.user);
       void refreshConfig();
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
@@ -58,7 +58,7 @@ export default function OtpScreen() {
     } finally {
       setVerifying(false);
     }
-  }, [phone, signIn, refreshConfig]);
+  }, [phone, params.name, signIn, refreshConfig]);
 
   // Auto-submit the moment the sixth digit lands.
   const onChange = (text: string) => {

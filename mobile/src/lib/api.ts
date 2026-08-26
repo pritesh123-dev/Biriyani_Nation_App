@@ -119,9 +119,9 @@ export const api = {
       '/auth/request-otp', { method: 'POST', body: { phone, channel } },
     ),
 
-  verifyOtp: (phone: string, code: string, referredBy?: string) =>
+  verifyOtp: (phone: string, code: string, name?: string, referredBy?: string) =>
     request<{ token: string; user: User; admin: boolean }>(
-      '/auth/verify-otp', { method: 'POST', body: { phone, code, referredBy } },
+      '/auth/verify-otp', { method: 'POST', body: { phone, code, name, referredBy } },
     ),
 
   getConfig: () => request<StoreConfig>('/config'),
