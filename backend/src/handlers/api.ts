@@ -151,7 +151,14 @@ async function handleRequestOtp(event: APIGatewayProxyEventV2) {
     }
   }
 
-  const code = randomOtp(6);
+  // Demo/reviewer bypass: a single fixed number gets a fixed code and
+  // never touches WhatsApp or SMS. This is the same account the App
+  // Store / Play reviewer demo credentials point at (see
+  // docs/STORE_SUBMISSION.md). It only activates when DEMO_PHONE is set
+  // as a stack parameter — clear it and redeploy to turn this off.
+  const demoPhone = normalisePhone(process.env.DEMO_PHONE ?? '');
+  const isDemo = !!demoPhone && phone === demoPhone && !!process.env.DEMO_OTP_CODE;
+  const code = isDemo ? process.env.DEMO_OTP_CODE! : randomOtp(6);
   const salt = randomSalt();
 
   await putItem({
@@ -163,12 +170,16 @@ async function handleRequestOtp(event: APIGatewayProxyEventV2) {
     ttl: ttlIn(OTP_TTL_SECONDS),
   });
 
-  try {
-    await sendOtp(phone, code, channel);
-  } catch (err) {
-    console.error('OTP send failed', { phone: maskPhone(phone), channel, err });
-    await deleteItem(K.otp(phone));
-    return serverError('We could not send the code right now. Please try again.');
+  if (isDemo) {
+    console.log('Demo OTP issued (no WhatsApp/SMS sent)', { phone: maskPhone(phone) });
+  } else {
+    try {
+      await sendOtp(phone, code, channel);
+    } catch (err) {
+      console.error('OTP send failed', { phone: maskPhone(phone), channel, err });
+      await deleteItem(K.otp(phone));
+      return serverError('We could not send the code right now. Please try again.');
+    }
   }
 
   await ddb.send(new UpdateCommand({

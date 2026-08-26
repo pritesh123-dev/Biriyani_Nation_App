@@ -33,7 +33,7 @@ try {
   execFileSync(
     join(root, 'node_modules/.bin/esbuild'),
     [join(root, 'src/lib/config.ts'), '--bundle', '--platform=node',
-     '--target=node20', '--format=esm', `--outfile=${out}`, '--external:@aws-sdk/*'],
+     '--target=node22', '--format=esm', `--outfile=${out}`, '--external:@aws-sdk/*'],
     { stdio: 'pipe' },
   );
 

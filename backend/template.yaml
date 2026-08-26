@@ -16,10 +16,36 @@ Parameters:
     Type: String
     Default: ''
     Description: Comma-separated E.164 phones granted kitchen-admin rights (e.g. +919876543210).
+  DemoPhone:
+    Type: String
+    Default: ''
+    Description: >
+      A single E.164 test number that bypasses WhatsApp/SMS delivery entirely
+      (used for demos, and later as the App Store / Play reviewer account).
+      Leave blank to disable. Must be paired with DemoOtpCode.
+  DemoOtpCode:
+    Type: String
+    Default: ''
+    Description: The fixed 6-digit code DemoPhone accepts. Leave blank to disable the bypass.
+    NoEcho: true
+  EnableCdn:
+    Type: String
+    Default: 'true'
+    AllowedValues: ['true', 'false']
+    Description: >
+      Set to 'false' to deploy without CloudFront — needed on a brand-new AWS
+      account until AWS Support verifies it for CloudFront (a one-time,
+      account-level check unrelated to IAM permissions). The app already
+      falls back to a bundled placeholder image when no photo URL exists,
+      so nothing else depends on this. Flip back to 'true' and redeploy once
+      verified; every dish photo URL you add afterward just starts working.
+
+Conditions:
+  UseCdn: !Equals [!Ref EnableCdn, 'true']
 
 Globals:
   Function:
-    Runtime: nodejs20.x
+    Runtime: nodejs22.x
     Architectures: [arm64]          # Graviton: ~20% cheaper than x86
     MemorySize: 512
     Timeout: 10
@@ -28,10 +54,12 @@ Globals:
       Variables:
         TABLE_NAME: !Ref AppTable
         BUCKET_NAME: !Ref MediaBucket
-        MEDIA_BASE_URL: !Sub 'https://${MediaCdn.DomainName}'
+        MEDIA_BASE_URL: !If [UseCdn, !Sub 'https://${MediaCdn.DomainName}', '']
         STAGE: !Ref Stage
         OTP_CHANNEL: !Ref OtpChannel
         ADMIN_PHONES: !Ref AdminPhones
+        DEMO_PHONE: !Ref DemoPhone
+        DEMO_OTP_CODE: !Ref DemoOtpCode
         NODE_OPTIONS: '--enable-source-maps'
   Api:
     Cors:
@@ -95,6 +123,7 @@ Resources:
 
   MediaOac:
     Type: AWS::CloudFront::OriginAccessControl
+    Condition: UseCdn
     Properties:
       OriginAccessControlConfig:
         Name: !Sub 'biriyani-media-oac-${Stage}'
@@ -106,6 +135,7 @@ Resources:
   # S3 once per image per region, not once per customer.
   MediaCdn:
     Type: AWS::CloudFront::Distribution
+    Condition: UseCdn
     Properties:
       DistributionConfig:
         Enabled: true
@@ -124,6 +154,7 @@ Resources:
 
   MediaBucketPolicy:
     Type: AWS::S3::BucketPolicy
+    Condition: UseCdn
     Properties:
       Bucket: !Ref MediaBucket
       PolicyDocument:
@@ -143,12 +174,12 @@ Resources:
     Type: AWS::Serverless::HttpApi
     Properties:
       StageName: !Ref Stage
-      Throttle:
-        BurstLimit: 200
-        RateLimit: 100
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 200
+        ThrottlingRateLimit: 100
       AccessLogSettings:
         DestinationArn: !GetAtt ApiLogGroup.Arn
-        Format: '{"t":"$context.requestTime","m":"$context.httpMethod","p":"$context.path","s":"$context.status","err":"$context.error.message","lat":"$context.responseLatency"}'
+        Format: '{"id":"$context.requestId","t":"$context.requestTime","m":"$context.httpMethod","p":"$context.path","s":"$context.status","err":"$context.error.message","lat":"$context.responseLatency"}'
 
   ApiLogGroup:
     Type: AWS::Logs::LogGroup
@@ -162,7 +193,7 @@ Resources:
       BuildMethod: esbuild
       BuildProperties:
         Minify: true
-        Target: node20
+        Target: node22
         Sourcemap: true
         EntryPoints: [src/handlers/api.ts]
     Properties:
@@ -198,7 +229,8 @@ Outputs:
     Description: Base URL to put in the mobile app's EXPO_PUBLIC_API_URL
     Value: !Sub 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}'
   MediaUrl:
-    Description: CDN base URL for dish photos
+    Description: CDN base URL for dish photos (only present when EnableCdn=true)
+    Condition: UseCdn
     Value: !Sub 'https://${MediaCdn.DomainName}'
   TableName:
     Value: !Ref AppTable
