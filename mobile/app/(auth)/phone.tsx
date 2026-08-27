@@ -9,27 +9,25 @@ import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
 
 import { useApp } from '../../src/lib/store';
 import { api, ApiError } from '../../src/lib/api';
-import { GoldButton, ErrorNote, Icon } from '../../src/components/ui';
+import { GoldButton, ErrorNote } from '../../src/components/ui';
 import { C, F, R, S } from '../../src/theme';
 
 const HERO = require('../../assets/hero-biriyani.jpg');
 
 /**
- * Sign-in is name + mobile number, no Google, no password — the OTP both
- * registers and authenticates. Name is optional: a returning customer can
- * leave it blank without it clobbering what they already have on file
- * (the backend only ever fills a blank displayName, never overwrites one).
+ * Sign-in is one field: the mobile number. No password, no Google — the
+ * OTP both registers and authenticates. A brand-new number is asked for
+ * a name once, right after verification (see name.tsx); a returning
+ * number skips straight to the app. OTP always goes over WhatsApp — see
+ * docs/OTP_SETUP.md for why SMS isn't offered here.
  */
 export default function PhoneScreen() {
   const { config } = useApp();
   const { height } = useWindowDimensions();
 
-  const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [channel, setChannel] = useState<'whatsapp' | 'sms'>('whatsapp');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const nameRef = useRef<TextInput>(null);
   const phoneRef = useRef<TextInput>(null);
 
   const digits = phone.replace(/\D/g, '');
@@ -40,12 +38,11 @@ export default function PhoneScreen() {
     setSending(true);
     setError(null);
     try {
-      const res = await api.requestOtp(digits, channel);
+      const res = await api.requestOtp(digits, 'whatsapp');
       router.push({
         pathname: '/(auth)/otp',
         params: {
           phone: digits,
-          name: name.trim(),
           channel: res.channel,
           resendIn: String(res.resendInSeconds ?? 30),
         },
@@ -55,7 +52,7 @@ export default function PhoneScreen() {
     } finally {
       setSending(false);
     }
-  }, [valid, sending, digits, channel, name]);
+  }, [valid, sending, digits]);
 
   const heroHeight = Math.min(404, Math.max(280, height * 0.44));
   const brand = config?.brand;
@@ -112,34 +109,6 @@ export default function PhoneScreen() {
 
         {/* Form */}
         <View style={{ paddingHorizontal: 26, paddingTop: 10, paddingBottom: 34, gap: 14 }}>
-          <Text style={S.eyebrow}>Your name</Text>
-
-          <Pressable
-            onPress={() => nameRef.current?.focus()}
-            style={{
-              height: 52, borderRadius: R.md, paddingHorizontal: 16,
-              justifyContent: 'center',
-              backgroundColor: C.card,
-              borderWidth: 1, borderColor: C.goldLine,
-            }}
-          >
-            <TextInput
-              ref={nameRef}
-              value={name}
-              onChangeText={setName}
-              placeholder="Ananya Mishra"
-              placeholderTextColor={C.text30}
-              textContentType="name"
-              autoComplete="name"
-              returnKeyType="next"
-              onSubmitEditing={() => phoneRef.current?.focus()}
-              autoFocus
-              style={{
-                fontFamily: F.sans600, fontSize: 15, color: C.text, padding: 0,
-              }}
-            />
-          </Pressable>
-
           <Text style={S.eyebrow}>Mobile number</Text>
 
           <Pressable
@@ -166,31 +135,13 @@ export default function PhoneScreen() {
               maxLength={11}          // 10 digits + the space we insert
               returnKeyType="go"
               onSubmitEditing={submit}
+              autoFocus
               style={{
                 flex: 1, fontFamily: F.sans600, fontSize: 16,
                 color: C.text, letterSpacing: 1, padding: 0,
               }}
             />
           </Pressable>
-
-          {/* Channel picker — only shown when the backend offers both. */}
-          <View style={{
-            flexDirection: 'row', gap: 4, padding: 4,
-            borderRadius: R.md, backgroundColor: C.card,
-            borderWidth: 1, borderColor: C.hair,
-          }}>
-            <ChannelTab
-              label="WhatsApp"
-              active={channel === 'whatsapp'}
-              onPress={() => setChannel('whatsapp')}
-              icon={<Icon.whatsapp color={channel === 'whatsapp' ? C.onGold : C.text45} size={15} />}
-            />
-            <ChannelTab
-              label="SMS"
-              active={channel === 'sms'}
-              onPress={() => setChannel('sms')}
-            />
-          </View>
 
           <ErrorNote message={error} />
 
@@ -206,39 +157,12 @@ export default function PhoneScreen() {
             fontFamily: F.sans, fontSize: 10.5, lineHeight: 17,
             color: C.text30, textAlign: 'center', paddingHorizontal: 12,
           }}>
-            We only use your number to confirm orders. By continuing you
-            agree to our Terms and Privacy Policy.
+            We text a one-time code on WhatsApp to confirm it's you. By
+            continuing you agree to our Terms and Privacy Policy.
           </Text>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
-  );
-}
-
-function ChannelTab({
-  label, active, onPress, icon,
-}: {
-  label: string; active: boolean; onPress: () => void; icon?: React.ReactNode;
-}) {
-  return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="radio"
-      accessibilityState={{ selected: active }}
-      style={{
-        flex: 1, height: 40, borderRadius: 11,
-        flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7,
-        backgroundColor: active ? C.goldBottom : 'transparent',
-      }}
-    >
-      {icon}
-      <Text style={{
-        fontFamily: F.sans800, fontSize: 12.5,
-        color: active ? C.onGold : C.text45,
-      }}>
-        {label}
-      </Text>
-    </Pressable>
   );
 }
 

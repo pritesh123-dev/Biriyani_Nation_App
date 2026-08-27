@@ -7,6 +7,7 @@ import { Loading } from './components/ui';
 import Home from './screens/Home';
 import Login from './screens/Login';
 import Verify from './screens/Verify';
+import Name from './screens/Name';
 import Menu from './screens/Menu';
 import Dish from './screens/Dish';
 import Cart from './screens/Cart';
@@ -28,6 +29,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/verify" element={<Verify />} />
+        <Route path="/name" element={<Name />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/dish/:id" element={<Dish />} />
         <Route path="/cart" element={<Cart />} />

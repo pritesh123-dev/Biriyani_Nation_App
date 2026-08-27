@@ -15,11 +15,10 @@ const CODE_LENGTH = 6;
 
 export default function OtpScreen() {
   const insets = useSafeAreaInsets();
-  const params = useLocalSearchParams<{ phone: string; name?: string; channel: string; resendIn: string }>();
+  const params = useLocalSearchParams<{ phone: string; channel: string; resendIn: string }>();
   const { signIn, refreshConfig } = useApp();
 
   const phone = params.phone ?? '';
-  const channelLabel = params.channel === 'sms' ? 'SMS' : 'WhatsApp';
 
   const [code, setCode] = useState('');
   const [verifying, setVerifying] = useState(false);
@@ -44,11 +43,13 @@ export default function OtpScreen() {
     setError(null);
 
     try {
-      const res = await api.verifyOtp(phone, value, params.name || undefined);
+      const res = await api.verifyOtp(phone, value);
       await signIn(res.token, res.user);
       void refreshConfig();
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
-      router.replace('/(tabs)');
+      // A brand-new account (or one that never set a name) is asked once,
+      // right here — a returning customer skips straight into the app.
+      router.replace(res.user.displayName ? '/(tabs)' : '/(auth)/name');
     } catch (err) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch(() => {});
       setError(err instanceof ApiError ? err.message : 'Could not verify that code.');
@@ -58,7 +59,7 @@ export default function OtpScreen() {
     } finally {
       setVerifying(false);
     }
-  }, [phone, params.name, signIn, refreshConfig]);
+  }, [phone, signIn, refreshConfig]);
 
   // Auto-submit the moment the sixth digit lands.
   const onChange = (text: string) => {
@@ -73,7 +74,7 @@ export default function OtpScreen() {
     setResending(true);
     setError(null);
     try {
-      const res = await api.requestOtp(phone, params.channel as 'sms' | 'whatsapp');
+      const res = await api.requestOtp(phone, 'whatsapp');
       setSeconds(res.resendInSeconds ?? 30);
       setCode('');
       submitted.current = false;
@@ -84,7 +85,7 @@ export default function OtpScreen() {
     } finally {
       setResending(false);
     }
-  }, [seconds, resending, phone, params.channel]);
+  }, [seconds, resending, phone]);
 
   return (
     <KeyboardAvoidingView
@@ -101,7 +102,7 @@ export default function OtpScreen() {
           Verify your{'\n'}number
         </Text>
         <Text style={[S.body, { marginTop: 10 }]}>
-          A {CODE_LENGTH}-digit code was sent on {channelLabel} to{' '}
+          A {CODE_LENGTH}-digit code was sent on WhatsApp to{' '}
           <Text style={{ color: C.gold }}>+91 {formatPhone(phone)}</Text>
         </Text>
 

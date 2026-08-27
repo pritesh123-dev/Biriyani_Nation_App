@@ -46,6 +46,8 @@ Answer the prompts:
 | Parameter Stage | `prod` |
 | Parameter OtpChannel | `whatsapp` (see [OTP_SETUP.md](OTP_SETUP.md)) |
 | Parameter AdminPhones | your mobile, e.g. `+919876543210` |
+| Parameter DemoPhone / DemoOtpCode | leave blank, or set a fixed test number + code that bypasses WhatsApp — handy for testing before WhatsApp is live, and doubles as the App Store/Play reviewer account later |
+| Parameter EnableCdn | `true` — set to `false` instead if the deploy fails on CloudFront (see below) |
 | Confirm changes before deploy | `N` |
 | Allow SAM CLI IAM role creation | `Y` |
 | Disable rollback | `N` |
@@ -130,11 +132,42 @@ OTP, but there is no reason to advertise the panel.
 ```
 
 It prints a key like `dishes/chicken.jpg`. Paste that into the dish's
-**Photo** field in the admin panel. The app resolves it through
-CloudFront automatically.
+**Photo** field in the admin panel. The app resolves it to a full URL
+automatically — through CloudFront if `EnableCdn=true`, or straight from
+S3 if not (see below).
 
 Shoot photos at **1200×1500** (4:5 portrait), compress to under 200 KB.
 Free tool: [squoosh.app](https://squoosh.app).
+
+### If CloudFront won't deploy
+
+New AWS accounts sometimes can't create CloudFront distributions until
+AWS Support verifies the account — a one-time, unrelated-to-IAM check
+(`sam deploy` fails with "Your account must be verified before you can
+add new CloudFront resources"). This is not a blocker: deploy with
+`EnableCdn=false` (the template default is `true`, so pass this
+explicitly) and dish photos serve directly from S3 instead — same image
+keys, same admin panel field, just no edge caching. File a support case
+to lift the restriction when you have a minute, then flip back to
+`EnableCdn=true` and redeploy; nothing else changes.
+
+```bash
+sam deploy --parameter-overrides EnableCdn=false ...
+```
+
+### Checking who's signed up
+
+Registered customers live in **DynamoDB** (table `biriyani-nation-<stage>`),
+not S3 — S3 only holds photos. Two ways to look:
+
+- **Admin panel → Customers tab** — pick a day, see who registered, export CSV
+- **Every customer, any day:**
+  ```bash
+  ./scripts/list-customers.sh
+  ```
+
+Or browse it directly: AWS Console → DynamoDB → Tables →
+`biriyani-nation-prod` → Explore table items → filter `sk = PROFILE`.
 
 ---
 

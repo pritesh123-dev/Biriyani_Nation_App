@@ -42,6 +42,7 @@ Parameters:
 
 Conditions:
   UseCdn: !Equals [!Ref EnableCdn, 'true']
+  NoCdn: !Not [!Equals [!Ref EnableCdn, 'true']]
 
 Globals:
   Function:
@@ -54,7 +55,10 @@ Globals:
       Variables:
         TABLE_NAME: !Ref AppTable
         BUCKET_NAME: !Ref MediaBucket
-        MEDIA_BASE_URL: !If [UseCdn, !Sub 'https://${MediaCdn.DomainName}', '']
+        MEDIA_BASE_URL: !If
+          - UseCdn
+          - !Sub 'https://${MediaCdn.DomainName}'
+          - !Sub 'https://${MediaBucket}.s3.${AWS::Region}.amazonaws.com'
         STAGE: !Ref Stage
         OTP_CHANNEL: !Ref OtpChannel
         ADMIN_PHONES: !Ref AdminPhones
@@ -104,11 +108,20 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub 'biriyani-nation-media-${Stage}-${AWS::AccountId}'
+      # With the CDN on, CloudFront's Origin Access Control is the only
+      # reader and the bucket stays fully locked down. With the CDN off
+      # (new AWS accounts need a one-time CloudFront verification from
+      # AWS Support before they can create a distribution — see
+      # docs/DEPLOYMENT.md) the bucket serves dish photos directly, which
+      # needs BlockPublicPolicy off so MediaBucketPublicPolicy below can
+      # attach. Photos are the only thing in this bucket and are meant to
+      # be publicly visible either way — this isn't a security downgrade,
+      # just a different reader.
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
-        BlockPublicPolicy: true
+        BlockPublicPolicy: !If [UseCdn, true, false]
         IgnorePublicAcls: true
-        RestrictPublicBuckets: true
+        RestrictPublicBuckets: !If [UseCdn, true, false]
       CorsConfiguration:
         CorsRules:
           - AllowedMethods: [GET, PUT]
@@ -167,6 +180,22 @@ Resources:
             Condition:
               StringEquals:
                 AWS:SourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${MediaCdn}'
+
+  # No-CDN fallback: anyone can GET an object, nobody can list the bucket
+  # or write to it. Swap to EnableCdn=true once CloudFront is verified —
+  # nothing else needs to change, dish image keys stay the same.
+  MediaBucketPublicPolicy:
+    Type: AWS::S3::BucketPolicy
+    Condition: NoCdn
+    Properties:
+      Bucket: !Ref MediaBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: '*'
+            Action: s3:GetObject
+            Resource: !Sub '${MediaBucket.Arn}/*'
 
   # ─────────────────────────── API ────────────────────────────
   # HTTP API, not REST API: $1.00 per million requests instead of $3.50.
@@ -229,9 +258,11 @@ Outputs:
     Description: Base URL to put in the mobile app's EXPO_PUBLIC_API_URL
     Value: !Sub 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}'
   MediaUrl:
-    Description: CDN base URL for dish photos (only present when EnableCdn=true)
-    Condition: UseCdn
-    Value: !Sub 'https://${MediaCdn.DomainName}'
+    Description: Base URL for dish photos — CloudFront when EnableCdn=true, direct S3 otherwise
+    Value: !If
+      - UseCdn
+      - !Sub 'https://${MediaCdn.DomainName}'
+      - !Sub 'https://${MediaBucket}.s3.${AWS::Region}.amazonaws.com'
   TableName:
     Value: !Ref AppTable
   MediaBucket:

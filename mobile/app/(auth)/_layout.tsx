@@ -7,6 +7,7 @@ export default function AuthLayout() {
     <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: C.bg } }}>
       <Stack.Screen name="phone" />
       <Stack.Screen name="otp" />
+      <Stack.Screen name="name" options={{ gestureEnabled: false }} />
     </Stack>
   );
 }

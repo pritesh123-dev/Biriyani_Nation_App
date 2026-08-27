@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import type { ChangeEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { api, ApiError } from '../lib/api';
 import { useApp } from '../lib/store';
 import { ErrorNote } from '../components/ui';
 
 interface NavState {
-  phone: string; name?: string; channel: string; resendIn: number;
+  phone: string; channel: string; resendIn: number;
 }
 
 const CODE_LENGTH = 6;
@@ -44,10 +45,12 @@ export default function Verify() {
     setVerifying(true);
     setError(null);
     try {
-      const res = await api.verifyOtp(state.phone, value, state.name);
+      const res = await api.verifyOtp(state.phone, value);
       signIn(res.token, res.user);
       void refreshConfig();
-      navigate('/', { replace: true });
+      // A brand-new account (or one that never set a name) is asked once,
+      // right here — a returning customer lands straight on the home page.
+      navigate(res.user.displayName ? '/' : '/name', { replace: true });
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Could not verify that code.');
       setCode('');
@@ -58,7 +61,7 @@ export default function Verify() {
     }
   }, [state, signIn, refreshConfig, navigate]);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const next = e.target.value.replace(/\D/g, '').slice(0, CODE_LENGTH);
     setCode(next);
     setError(null);
@@ -70,7 +73,7 @@ export default function Verify() {
     setResending(true);
     setError(null);
     try {
-      const res = await api.requestOtp(state.phone, state.channel as 'sms' | 'whatsapp');
+      const res = await api.requestOtp(state.phone, 'whatsapp');
       setSeconds(res.resendInSeconds ?? 30);
       setCode('');
       submitted.current = false;
@@ -94,7 +97,7 @@ export default function Verify() {
           Verify your<br />number
         </h1>
         <p style={{ margin: '10px 0 0', font: '500 13px/1.6 Manrope,sans-serif', color: 'var(--text-55)' }}>
-          A {CODE_LENGTH}-digit code was sent on {state.channel === 'sms' ? 'SMS' : 'WhatsApp'} to{' '}
+          A {CODE_LENGTH}-digit code was sent on WhatsApp to{' '}
           <span style={{ color: 'var(--gold)' }}>+91 {formatted}</span>
         </p>
       </div>
