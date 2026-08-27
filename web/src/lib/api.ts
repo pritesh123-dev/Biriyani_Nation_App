@@ -119,6 +119,9 @@ async function request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
 // of the PWA sharing infrastructure rather than duplicating it.
 
 export const api = {
+  checkPhone: (phone: string) =>
+    request<{ exists: boolean }>(`/auth/check-phone?phone=${encodeURIComponent(phone)}`),
+
   requestOtp: (phone: string, channel?: 'sms' | 'whatsapp') =>
     request<{ sent: boolean; channel: string; phone: string; expiresInSeconds: number; resendInSeconds: number }>(
       '/auth/request-otp', { method: 'POST', body: { phone, channel } },

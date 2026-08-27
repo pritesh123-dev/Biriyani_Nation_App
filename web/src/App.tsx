@@ -5,7 +5,7 @@ import { useApp } from './lib/store';
 import { Loading } from './components/ui';
 
 import Home from './screens/Home';
-import Login from './screens/Login';
+import AuthEntry from './screens/AuthEntry';
 import Verify from './screens/Verify';
 import Name from './screens/Name';
 import Menu from './screens/Menu';
@@ -27,7 +27,8 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<AuthEntry mode="signin" />} />
+        <Route path="/signup" element={<AuthEntry mode="signup" />} />
         <Route path="/verify" element={<Verify />} />
         <Route path="/name" element={<Name />} />
         <Route path="/menu" element={<Menu />} />

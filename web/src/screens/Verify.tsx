@@ -6,7 +6,7 @@ import { useApp } from '../lib/store';
 import { ErrorNote } from '../components/ui';
 
 interface NavState {
-  phone: string; channel: string; resendIn: number;
+  phone: string; channel: string; resendIn: number; mode?: 'signin' | 'signup';
 }
 
 const CODE_LENGTH = 6;
@@ -28,6 +28,8 @@ export default function Verify() {
   useEffect(() => {
     if (!state?.phone) navigate('/login', { replace: true });
   }, [state, navigate]);
+
+  const backTo = state?.mode === 'signup' ? '/signup' : '/login';
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -140,7 +142,7 @@ export default function Verify() {
               Resend code
             </button>
           ) : null}
-          <button onClick={() => navigate('/login')} style={{ border: 0, background: 'transparent', cursor: 'pointer', font: '700 12px Manrope,sans-serif', color: 'var(--text-45)' }}>
+          <button onClick={() => navigate(backTo)} style={{ border: 0, background: 'transparent', cursor: 'pointer', font: '700 12px Manrope,sans-serif', color: 'var(--text-45)' }}>
             Change number
           </button>
         </div>

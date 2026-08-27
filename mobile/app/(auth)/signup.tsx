@@ -5,14 +5,8 @@ import AuthHero from '../../src/components/AuthHero';
 import AuthEntryForm from '../../src/components/AuthEntryForm';
 import { S } from '../../src/theme';
 
-/**
- * Sign-in: one field, the mobile number. No password, no Google — the
- * OTP both registers and authenticates. Refuses an unregistered number
- * with a link to sign up instead (see AuthEntryForm) rather than
- * silently creating an account here. OTP always goes over WhatsApp —
- * see docs/OTP_SETUP.md for why SMS isn't offered.
- */
-export default function PhoneScreen() {
+/** Sign-up: same form as sign-in, refuses a number that's already registered. */
+export default function SignupScreen() {
   return (
     <KeyboardAvoidingView
       style={S.screen}
@@ -24,7 +18,7 @@ export default function PhoneScreen() {
         bounces={false}
       >
         <AuthHero />
-        <AuthEntryForm mode="signin" />
+        <AuthEntryForm mode="signup" />
       </ScrollView>
     </KeyboardAvoidingView>
   );

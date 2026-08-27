@@ -48,6 +48,7 @@ async function route(
   // ── Public ──
   if (method === 'GET'  && path === '/health')            return ok({ ok: true });
   if (method === 'GET'  && path === '/config')            return handleGetConfig(event);
+  if (method === 'GET'  && path === '/auth/check-phone')  return handleCheckPhone(event);
   if (method === 'POST' && path === '/auth/request-otp')  return handleRequestOtp(event);
   if (method === 'POST' && path === '/auth/verify-otp')   return handleVerifyOtp(event);
 
@@ -126,6 +127,41 @@ async function handleGetConfig(event: APIGatewayProxyEventV2) {
 }
 
 // ──────────────────────────── OTP ────────────────────────────
+
+/**
+ * Lets the client tell sign-in from sign-up apart *before* burning an
+ * OTP: "this number isn't registered yet" is a much better first message
+ * than sending a code and only discovering that after the fact.
+ *
+ * This does trade away a little privacy — anyone can ask whether a given
+ * number has ordered from this one kitchen. Rate-limited on the number
+ * being checked, in its own bucket (never the OTP-send counter — sharing
+ * one would let a few sign-in retries burn through someone's real OTP
+ * budget before they ever ask for a code), so it can't be used to scan a
+ * phone book. The right tradeoff for a single-kitchen app with nothing
+ * sensitive behind the answer.
+ */
+async function handleCheckPhone(event: APIGatewayProxyEventV2) {
+  const phone = normalisePhone(event.queryStringParameters?.phone ?? '');
+  if (!phone) return badRequest('Enter a valid mobile number.');
+
+  const hourWindow = new Date().toISOString().slice(0, 13);
+  const rateKey = K.rate(phone, `check#${hourWindow}`);
+  const rate = await getItem<{ count: number }>(rateKey);
+  if (rate && rate.count >= OTP_SENDS_PER_HOUR * 2) {
+    return tooMany('Too many attempts. Try again in an hour.', 3600);
+  }
+  await ddb.send(new UpdateCommand({
+    TableName: TABLE,
+    Key: rateKey,
+    UpdateExpression: 'ADD #c :one SET #t = :ttl',
+    ExpressionAttributeNames: { '#c': 'count', '#t': 'ttl' },
+    ExpressionAttributeValues: { ':one': 1, ':ttl': ttlIn(3600) },
+  }));
+
+  const user = await getItem<{ phone: string }>(K.user(phone));
+  return ok({ exists: !!user });
+}
 
 async function handleRequestOtp(event: APIGatewayProxyEventV2) {
   const body = parseBody<{ phone?: string; channel?: Channel }>(event);

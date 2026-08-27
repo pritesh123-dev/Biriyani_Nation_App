@@ -126,6 +126,13 @@ t('otp and rate rows are separate from the profile', () => {
   assert.notEqual(K.otp(phone).pk, K.user(phone).pk);
   assert.notEqual(K.rate(phone, '2026-01-01T10').pk, K.user(phone).pk);
 });
+t('phone-exists checks use a separate rate bucket from OTP sends', () => {
+  // A few sign-in-screen retries must never eat into someone's real OTP
+  // budget before they've asked for a code.
+  const phone = '+919876543210';
+  const hour = '2026-01-01T10';
+  assert.notEqual(K.rate(phone, `check#${hour}`).sk, K.rate(phone, hour).sk);
+});
 
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);
