@@ -12,12 +12,16 @@
       "resizeMode": "contain",
       "backgroundColor": "#0B0906"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "in.biriyanination.app",
       "buildNumber": "1",
-      "config": { "usesNonExemptEncryption": false },
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "infoPlist": {
         "CFBundleDisplayName": "BiriyaniNation",
         "ITSAppUsesNonExemptEncryption": false
@@ -30,7 +34,9 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0B0906"
       },
-      "permissions": ["INTERNET"],
+      "permissions": [
+        "INTERNET"
+      ],
       "blockedPermissions": [
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.ACCESS_COARSE_LOCATION"
@@ -40,15 +46,25 @@
       "expo-router",
       "expo-secure-store",
       "expo-font",
-      ["expo-splash-screen", { "backgroundColor": "#0B0906", "resizeMode": "contain" }]
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0B0906",
+          "resizeMode": "contain"
+        }
+      ]
     ],
-    "updates": {
-      "url": "https://u.expo.dev/REPLACE_WITH_EAS_PROJECT_ID",
-      "fallbackToCacheTimeout": 0
+    "runtimeVersion": {
+      "policy": "appVersion"
     },
-    "runtimeVersion": { "policy": "appVersion" },
     "extra": {
-      "eas": { "projectId": "REPLACE_WITH_EAS_PROJECT_ID" }
-    }
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "c10c4680-a6c0-497d-b6ce-5bd8b25d7c11"
+      }
+    },
+    "owner": "pritesh_dev"
   }
 }

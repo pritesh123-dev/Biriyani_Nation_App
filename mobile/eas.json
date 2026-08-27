@@ -4,17 +4,17 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "env": { "EXPO_PUBLIC_API_URL": "https://REPLACE.execute-api.ap-south-1.amazonaws.com/dev" }
+      "env": { "EXPO_PUBLIC_API_URL": "https://qr1f45vth1.execute-api.ap-south-1.amazonaws.com/prod" }
     },
     "preview": {
       "distribution": "internal",
       "android": { "buildType": "apk" },
-      "env": { "EXPO_PUBLIC_API_URL": "https://REPLACE.execute-api.ap-south-1.amazonaws.com/prod" }
+      "env": { "EXPO_PUBLIC_API_URL": "https://qr1f45vth1.execute-api.ap-south-1.amazonaws.com/prod" }
     },
     "production": {
       "autoIncrement": true,
       "android": { "buildType": "app-bundle" },
-      "env": { "EXPO_PUBLIC_API_URL": "https://REPLACE.execute-api.ap-south-1.amazonaws.com/prod" }
+      "env": { "EXPO_PUBLIC_API_URL": "https://qr1f45vth1.execute-api.ap-south-1.amazonaws.com/prod" }
     }
   },
   "submit": {

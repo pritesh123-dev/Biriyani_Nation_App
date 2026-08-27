@@ -15,9 +15,9 @@ export default function TabsLayout() {
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <Tabs
-        sceneContainerStyle={{ backgroundColor: C.bg }}
         screenOptions={{
           headerShown: false,
+          sceneStyle: { backgroundColor: C.bg },
           tabBarShowLabel: true,
           tabBarActiveTintColor: C.gold,
           tabBarInactiveTintColor: 'rgba(246,238,225,0.42)',

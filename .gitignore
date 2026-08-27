@@ -10,3 +10,4 @@ samconfig.toml
 play-service-account.json
 mobile/android/
 mobile/ios/
+.env
