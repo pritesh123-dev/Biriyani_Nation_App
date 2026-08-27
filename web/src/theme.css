@@ -1,0 +1,164 @@
+/*
+ * Same palette as the React Native app (src/theme.ts there) — kept in
+ * sync by eye since the two projects don't share a build step. If you
+ * change a color here, change it there too.
+ */
+:root {
+  --bg: #0B0906;
+  --surface: #100C07;
+  --card: #1A140D;
+  --card-alt: #15110B;
+  --well: #241C12;
+  --chip: #2C2318;
+
+  --gold: #E3AE4E;
+  --gold-soft: #F3D79B;
+  --gold-top: #F0C066;
+  --gold-bottom: #DE9F35;
+  --on-gold: #241905;
+
+  --cream: #F6EEE1;
+  --veg: #4E9A6B;
+  --non-veg: #C0453A;
+  --whatsapp: #25603F;
+  --whatsapp-fg: #EAFBF0;
+
+  --text: #F6EEE1;
+  --text-85: rgba(246, 238, 225, 0.85);
+  --text-70: rgba(246, 238, 225, 0.70);
+  --text-55: rgba(246, 238, 225, 0.55);
+  --text-45: rgba(246, 238, 225, 0.45);
+  --text-35: rgba(246, 238, 225, 0.35);
+  --text-30: rgba(246, 238, 225, 0.30);
+
+  --hair: rgba(246, 238, 225, 0.08);
+  --hair-soft: rgba(246, 238, 225, 0.06);
+  --border: rgba(246, 238, 225, 0.14);
+  --gold-line: rgba(227, 174, 78, 0.24);
+  --gold-line-50: rgba(227, 174, 78, 0.5);
+  --gold-wash: rgba(227, 174, 78, 0.12);
+  --gold-wash-16: rgba(227, 174, 78, 0.16);
+  --non-veg-wash: rgba(192, 69, 58, 0.16);
+
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Manrope', system-ui, -apple-system, sans-serif;
+
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 16px;
+  --r-xl: 18px;
+  --r-xxl: 22px;
+  --r-pill: 999px;
+
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  /* iOS PWA standalone mode: keep content out of the notch/home-indicator. */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+a { color: var(--gold); text-decoration: none; }
+a:hover { color: var(--gold-soft); }
+
+button {
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+img { max-width: 100%; display: block; }
+
+::-webkit-scrollbar { width: 0; height: 0; }
+
+.gold-btn {
+  height: 54px;
+  border: 0;
+  border-radius: var(--r-lg);
+  background: linear-gradient(180deg, var(--gold-top), var(--gold-bottom));
+  color: var(--on-gold);
+  font: 800 14px/1 var(--sans);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 14px 30px rgba(227, 174, 78, 0.22);
+  transition: filter 0.15s;
+}
+.gold-btn:hover { filter: brightness(1.06); }
+.gold-btn:disabled {
+  background: rgba(246, 238, 225, 0.1);
+  color: var(--text-35);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.ghost-btn {
+  height: 50px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-85);
+  font: 700 13.5px/1 var(--sans);
+  cursor: pointer;
+}
+.ghost-btn:hover { border-color: var(--gold-line-50); }
+
+.card {
+  background: var(--card);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--hair);
+}
+
+.eyebrow {
+  font: 600 10px/1 var(--sans);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-45);
+}
+
+.eyebrow-gold {
+  font: 600 10px/1 var(--sans);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.veg-mark {
+  width: 11px;
+  height: 11px;
+  border: 1.5px solid;
+  border-radius: 2.5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.veg-mark::after {
+  content: '';
+  width: 4.5px;
+  height: 4.5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+@keyframes rise {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.rise { animation: rise 0.4s ease both; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { animation: spin 0.8s linear infinite; }

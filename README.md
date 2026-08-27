@@ -10,10 +10,27 @@ to the shipped app.
 ```
 backend/     AWS Lambda + DynamoDB + S3/CloudFront (SAM)
 mobile/      Expo React Native app for iOS and Android
+web/         PWA — free "Add to Home Screen" install for iOS, no Apple fee
 admin/       Single-file kitchen dashboard (menu, prices, orders)
 docs/        Deployment, OTP setup, costs, store submission
-App_design/  The original design file
+App_design/  The original design files (app + website)
 ```
+
+### Why there's both a native app and a PWA
+
+Apple charges the same $99/year Developer Program fee to publish *any*
+app on the App Store — native, React Native, or a wrapped web app. There
+is no technology choice that avoids it. What the PWA in `web/` buys
+instead is a **free path onto an iPhone that skips the App Store
+entirely**: open the site in Safari, tap Share → "Add to Home Screen",
+and it installs like a real app — full-screen, its own icon, works
+offline — at zero cost. The trade-off is discoverability: no App Store
+search, no reviews, customers have to be told to visit a link.
+
+Android stays on the React Native app in `mobile/` since it was already
+built, tested, and works — there's no reason to duplicate that. Both
+front ends call the identical backend in `backend/`, so a price change
+or a new dish in the admin panel updates everyone at once.
 
 ---
 
