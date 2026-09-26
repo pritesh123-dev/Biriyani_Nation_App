@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import heroImg from '../assets/hero-biriyani.jpg';
+import heroBgImg from '../assets/hero-biriyani.jpg';
+import heroBannerImg from '../assets/zayra-hero-banner.png';
 
 export default function ComingSoon() {
   const [phone, setPhone] = useState('');
@@ -58,203 +59,163 @@ export default function ComingSoon() {
 
   return (
     <div>
-      {/* ── 1. WARM CREAM HERO (DESIGN.md Section 1 Standard) ── */}
+      {/* ── 1. HERO SECTION WITH SUBTLE BIRYANI BACKGROUND (Screenshot 2 Match) ── */}
       <section style={{
-        padding: 'clamp(40px, 6vw, 72px) clamp(16px, 3.5vw, 40px) 48px',
-        maxWidth: 1240,
-        margin: '0 auto',
+        position: 'relative',
+        overflow: 'hidden',
+        padding: 'clamp(48px, 7vw, 84px) clamp(16px, 3.5vw, 40px) clamp(40px, 5vw, 64px)',
         textAlign: 'center',
       }}>
-        {/* Status indicator badge */}
+        {/* Subtle Biryani Handi Background with Warm Overlay */}
         <div style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 8,
-          padding: '6px 18px',
-          borderRadius: 'var(--r-pill)',
-          background: 'var(--green-light)',
-          color: 'var(--green-starbucks)',
-          marginBottom: 24,
-        }}>
-          <span style={{
-            width: 7,
-            height: 7,
-            borderRadius: '50%',
-            background: 'var(--green-accent)',
-            animation: 'pulseDot 2s infinite',
-          }} />
-          <span style={{ font: '700 12.5px/1 var(--sans)', letterSpacing: '-0.01em' }}>
-            Opening Soon in Bhubaneswar
-          </span>
-        </div>
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: `url(${heroBgImg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          opacity: 0.12,
+          filter: 'grayscale(30%)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }} />
 
-        {/* Primary Heading */}
-        <h1 style={{
-          font: '600 clamp(36px, 5.5vw, 64px)/1.15 var(--sans)',
-          letterSpacing: '-0.02em',
-          color: 'var(--green-starbucks)',
-          margin: '0 auto 18px',
-          maxWidth: 820,
-        }}>
-          Authentic Dum Biryani,<br />
-          <span style={{ color: 'var(--green-house)' }}>Crafted for Bhubaneswar.</span>
-        </h1>
-
-        {/* Subtitle */}
-        <p style={{
-          font: '400 clamp(16px, 1.8vw, 19px)/1.65 var(--sans)',
-          color: 'var(--text-black-soft)',
-          maxWidth: 640,
-          margin: '0 auto 28px',
-          letterSpacing: '-0.01em',
-        }}>
-          Sealed under dough in heavy handis, slow-cooked for 45 minutes with aged basmati, 
-          pure ghee, and aromatic spices. Fresh, piping hot pickup from our Bhubaneswar kitchen.
-        </p>
-
-        {/* Informational Store Status Card */}
+        {/* Soft gradient wash */}
         <div style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 10,
-          padding: '12px 24px',
-          borderRadius: 'var(--r-card)',
-          background: '#ffffff',
-          boxShadow: 'var(--shadow-card)',
-          color: 'var(--text-black)',
-          font: '600 13.5px/1.4 var(--sans)',
-          marginBottom: 32,
-        }}>
-          <span style={{ color: 'var(--green-accent)', fontSize: 16 }}>⏳</span>
-          <span>Online ordering will go live on grand opening day. Follow our pages for the launch date!</span>
-        </div>
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(180deg, rgba(242, 240, 235, 0.82) 0%, rgba(242, 240, 235, 0.96) 100%)',
+          pointerEvents: 'none',
+          zIndex: 1,
+        }} />
 
-        {/* Dual 50px Full-Pill CTAs */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 14,
-          flexWrap: 'wrap',
-        }}>
-          <a
-            href="https://www.instagram.com/zayrabiryani/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-primary-green"
-          >
-            Follow on Instagram
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-              <path d="M7 17L17 7M17 7H7M17 7V17" />
-            </svg>
-          </a>
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: 920, margin: '0 auto' }}>
+          {/* Status indicator badge */}
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '6px 18px',
+            borderRadius: 'var(--r-pill)',
+            background: 'var(--green-light)',
+            color: 'var(--green-starbucks)',
+            marginBottom: 24,
+          }}>
+            <span style={{
+              width: 7,
+              height: 7,
+              borderRadius: '50%',
+              background: 'var(--green-accent)',
+              animation: 'pulseDot 2s infinite',
+            }} />
+            <span style={{ font: '700 12.5px/1 var(--sans)', letterSpacing: '-0.01em' }}>
+              Opening Soon in Bhubaneswar
+            </span>
+          </div>
 
-          <a
-            href="https://www.youtube.com/@Zayra-Biryani"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-outlined-green"
-          >
-            Subscribe on YouTube
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-              <path d="M7 17L17 7M17 7H7M17 7V17" />
-            </svg>
-          </a>
+          {/* Primary Heading */}
+          <h1 style={{
+            font: '600 clamp(38px, 6vw, 68px)/1.12 var(--sans)',
+            letterSpacing: '-0.025em',
+            color: 'var(--green-starbucks)',
+            margin: '0 auto 20px',
+            maxWidth: 840,
+          }}>
+            Authentic Dum Biryani,<br />
+            <span style={{ color: 'var(--green-house)' }}>Crafted for Bhubaneswar.</span>
+          </h1>
+
+          {/* Subtitle */}
+          <p style={{
+            font: '400 clamp(16px, 1.8vw, 19px)/1.65 var(--sans)',
+            color: 'var(--text-black-soft)',
+            maxWidth: 680,
+            margin: '0 auto 30px',
+            letterSpacing: '-0.01em',
+          }}>
+            Sealed under dough in heavy handis, slow-cooked for 45 minutes with aged basmati, 
+            pure ghee, and aromatic spices. Fresh, piping hot pickup from our Bhubaneswar kitchen.
+          </p>
+
+          {/* Informational Store Status Card */}
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 10,
+            padding: '12px 24px',
+            borderRadius: 'var(--r-card)',
+            background: '#ffffff',
+            boxShadow: 'var(--shadow-card)',
+            color: 'var(--text-black)',
+            font: '600 clamp(12.5px, 1.5vw, 14px)/1.4 var(--sans)',
+            marginBottom: 34,
+            maxWidth: '100%',
+          }}>
+            <span style={{ color: 'var(--green-accent)', fontSize: 16 }}>⏳</span>
+            <span>Online ordering will go live on grand opening day. Follow our pages for the launch date!</span>
+          </div>
+
+          {/* Dual 50px Full-Pill CTAs */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 14,
+            flexWrap: 'wrap',
+          }}>
+            <a
+              href="https://www.instagram.com/zayrabiryani/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary-green"
+              style={{ padding: '0 26px', height: 48, fontSize: 15 }}
+            >
+              Follow on Instagram
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <path d="M7 17L17 7M17 7H7M17 7V17" />
+              </svg>
+            </a>
+
+            <a
+              href="https://www.youtube.com/@Zayra-Biryani"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-outlined-green"
+              style={{ padding: '0 26px', height: 48, fontSize: 15 }}
+            >
+              Subscribe on YouTube
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <path d="M7 17L17 7M17 7H7M17 7V17" />
+              </svg>
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* ── 2. HOUSE GREEN FEATURE BAND (DESIGN.md Section 4 & 9 Standard) ── */}
+      {/* ── 2. HERO PAGE CENTERPIECE BANNER (Image 3 Showcase) ── */}
       <section style={{
-        background: 'var(--green-house)',
-        color: 'var(--text-white)',
-        padding: 'clamp(48px, 6vw, 72px) clamp(16px, 3.5vw, 40px)',
-        margin: '16px 0 56px',
+        maxWidth: 1240,
+        margin: '0 auto 64px',
+        padding: '0 clamp(16px, 3.5vw, 40px)',
       }}>
         <div style={{
-          maxWidth: 1240,
-          margin: '0 auto',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: 'clamp(32px, 5vw, 64px)',
-          alignItems: 'center',
+          borderRadius: 'var(--r-card)',
+          overflow: 'hidden',
+          boxShadow: '0 16px 40px rgba(0, 0, 0, 0.16)',
+          border: '1px solid rgba(0, 0, 0, 0.08)',
+          background: '#000000',
+          position: 'relative',
         }}>
-          {/* Left Column: Headline + Copy + Inverted Buttons */}
-          <div>
-            <span style={{
-              font: '700 12px/1 var(--sans)',
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: 'var(--gold)',
+          <img
+            src={heroBannerImg}
+            alt="Zayra Biryani - More Than Biryani, A Better Story"
+            style={{
+              width: '100%',
+              height: 'auto',
+              maxHeight: '560px',
+              objectFit: 'cover',
               display: 'block',
-              marginBottom: 12,
-            }}>
-              The Bhubaneswar Cloud Kitchen
-            </span>
-            <h2 style={{
-              font: '600 clamp(28px, 4vw, 44px)/1.15 var(--sans)',
-              letterSpacing: '-0.02em',
-              color: '#ffffff',
-              margin: '0 0 18px',
-            }}>
-              Dough-Sealed Dum Cooking.<br />Zero Compromise.
-            </h2>
-            <p style={{
-              font: '400 clamp(15px, 1.6vw, 17px)/1.65 var(--sans)',
-              color: 'var(--text-white-soft)',
-              margin: '0 0 28px',
-            }}>
-              Nothing sits pre-cooked. Every single pot is layered with aged long-grain basmati, 
-              marinated cuts, and sealed under fresh dough to lock in the aroma for 45 minutes of slow dum.
-            </p>
-
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <a
-                href="https://www.instagram.com/zayrabiryani/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-inverted-white"
-              >
-                Explore Reels & BTS
-              </a>
-              <a
-                href="https://www.facebook.com/people/Zayra-Biryani/61594579809671/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-outlined-white"
-              >
-                Join Community
-              </a>
-            </div>
-          </div>
-
-          {/* Right Column: Photography Card */}
-          <div style={{
-            borderRadius: 'var(--r-card)',
-            overflow: 'hidden',
-            boxShadow: '0 12px 32px rgba(0,0,0,0.3)',
-            background: '#000000',
-            position: 'relative',
-          }}>
-            <img
-              src={heroImg}
-              alt="Zayra Biryani Bhubaneswar"
-              style={{ width: '100%', maxHeight: 380, objectFit: 'cover', display: 'block' }}
-            />
-            <div style={{
-              position: 'absolute',
-              bottom: 16,
-              left: 16,
-              background: 'rgba(30, 57, 50, 0.92)',
-              backdropFilter: 'blur(8px)',
-              padding: '8px 16px',
-              borderRadius: 'var(--r-pill)',
-              border: '1px solid rgba(255,255,255,0.2)',
-              color: '#ffffff',
-              font: '700 12px var(--sans)',
-            }}>
-              📍 Bhubaneswar · Counter Pickup
-            </div>
-          </div>
+            }}
+          />
         </div>
       </section>
 
@@ -273,7 +234,7 @@ export default function ComingSoon() {
             display: 'block',
             marginBottom: 8,
           }}>
-            Pure Retail Kitchen Craft
+            Authentic Hyderabadi Dum
           </span>
           <h2 style={{
             font: '600 clamp(26px, 3.5vw, 36px)/1.2 var(--sans)',
@@ -281,7 +242,7 @@ export default function ComingSoon() {
             color: 'var(--text-black)',
             margin: 0,
           }}>
-            Why Zayra Biryani Tastes Different
+            The Zayra Biryani Standards
           </h2>
         </div>
 
@@ -385,7 +346,7 @@ export default function ComingSoon() {
         </div>
       </section>
 
-      {/* ── 4. OFFICIAL SOCIAL COMMUNITY (DESIGN.md 3-Up Cards) ── */}
+      {/* ── 4. OFFICIAL SOCIAL COMMUNITY ── */}
       <section style={{
         maxWidth: 1240,
         margin: '0 auto 64px',
@@ -482,7 +443,7 @@ export default function ComingSoon() {
         </div>
       </section>
 
-      {/* ── 5. VIP LAUNCH PERK BAND (DESIGN.md Gold Lightest #faf6ee Wash) ── */}
+      {/* ── 5. VIP LAUNCH PERK BAND ── */}
       <section style={{
         maxWidth: 1240,
         margin: '0 auto 80px',
@@ -568,7 +529,7 @@ export default function ComingSoon() {
         </div>
       </section>
 
-      {/* ── 6. FLOATING FRAP CIRCULAR ORDER CTA (DESIGN.md Section 4 & 9) ── */}
+      {/* ── 6. FLOATING FRAP CIRCULAR CTA ── */}
       <a
         href="https://www.instagram.com/zayrabiryani/"
         target="_blank"
