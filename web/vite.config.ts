@@ -9,16 +9,16 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icons/apple-touch-icon.png'],
       manifest: {
-        name: 'BiriyaniNation',
-        short_name: 'BiriyaniNation',
-        description: 'Dum-cooked biriyani, sealed and collected hot. Pickup only.',
+        name: 'Zayra Biryani',
+        short_name: 'Zayra Biryani',
+        description: 'Authentic Hyderabadi dum biryani from Bhubaneswar. Opening soon.',
         start_url: '/',
         scope: '/',
         display: 'standalone',
-        // Matches the app's dark theme so the OS splash/status bar never
+        // Matches the site's emerald brand so the OS splash/status bar never
         // flashes a mismatched color while the page loads.
-        background_color: '#0B0906',
-        theme_color: '#0B0906',
+        background_color: '#f7f1e5',
+        theme_color: '#0a2a21',
         orientation: 'portrait',
         icons: [
           { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },

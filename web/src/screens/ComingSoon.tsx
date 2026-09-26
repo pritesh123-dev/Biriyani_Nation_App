@@ -1,548 +1,427 @@
-import React, { useState } from 'react';
-import heroBgImg from '../assets/hero-biriyani.jpg';
-import heroBannerImg from '../assets/zayra-hero-banner.png';
+import React, { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import storyImg from '../assets/photos/story-wide.webp';
+import cardChicken from '../assets/photos/card-chicken.webp';
+import cardMutton from '../assets/photos/card-mutton.webp';
+import cardEgg from '../assets/photos/card-egg.webp';
+import cardPaneer from '../assets/photos/card-paneer.webp';
+import cardVeg from '../assets/photos/card-veg.webp';
+import plateChicken from '../assets/plates/plate-chicken.webp';
+import plateMutton from '../assets/plates/plate-mutton.webp';
+import plateEgg from '../assets/plates/plate-egg.webp';
+import plateHyderabadi from '../assets/plates/plate-hyderabadi.webp';
+import plateVeg from '../assets/plates/plate-veg.webp';
+import {
+  SOCIAL, IconArrow, IconArrowUR, IconPlay, IconCheck, IconFlame, IconBowl, IconLeaf, IconLayers,
+  IconSeal, IconClock, IconStar, IconHeart, IconGift, IconLock, BrandInstagram, BrandYoutube, BrandFacebook,
+} from '../components/icons';
+
+// three.js (floating spices) is only downloaded when the hero actually renders
+const SpiceScene = lazy(() => import('../components/SpiceScene'));
+
+const PLATES = [
+  { name: 'Hyderabadi Chicken Dum Biryani', img: plateChicken, veg: false },
+  { name: 'Mutton Zafrani Dum Biryani', img: plateMutton, veg: false },
+  { name: 'Egg Dum Biryani', img: plateEgg, veg: false },
+  { name: 'Hyderabadi Dum Biryani', img: plateHyderabadi, veg: false },
+  { name: 'Veg Dum Biryani', img: plateVeg, veg: true },
+];
+
+function hasWebGL() {
+  try {
+    const c = document.createElement('canvas');
+    return !!(c.getContext('webgl2') || c.getContext('webgl'));
+  } catch {
+    return false;
+  }
+}
+
+const STEPS = [
+  { n: '01', title: 'Marinate', icon: <IconLeaf size={22} />, text: 'Meat and paneer rest in thick yogurt and hand-ground whole spices until every fibre is flavoured.' },
+  { n: '02', title: 'Layer', icon: <IconLayers size={22} />, text: 'Aged long-grain basmati, saffron milk, crisp fried onions, mint and pure desi ghee — layer by layer.' },
+  { n: '03', title: 'Seal', icon: <IconSeal size={22} />, text: 'Each handi is sealed shut with a ring of dough, trapping every bit of steam and aroma inside.' },
+  { n: '04', title: 'Dum', icon: <IconFlame size={22} />, text: '45 minutes on a gentle flame. No shortcuts, no essences — the handi is opened only when it’s ready.' },
+];
+
+const DISHES = [
+  { name: 'Chicken Dum Biryani', img: cardChicken, veg: false, text: 'Bone-in chicken and saffron rice, slow-cooked on dum in a sealed handi.' },
+  { name: 'Mutton Zafrani Biryani', img: cardMutton, veg: false, text: 'Tender mutton layered with zafrani rice and caramelised onions.' },
+  { name: 'Egg Dum Biryani', img: cardEgg, veg: false, text: 'Masala-roasted eggs tucked into fragrant long-grain basmati.' },
+  { name: 'Paneer Tikka Biryani', img: cardPaneer, veg: true, text: 'Char-grilled paneer tikka with mint, saffron rice and ghee.' },
+  { name: 'Aloo Dum Biryani', img: cardVeg, veg: true, text: 'Spiced potatoes and garden vegetables dum-cooked with aromatic basmati.' },
+];
+
+const SOCIALS = [
+  { name: 'Instagram', handle: '@zayrabiryani', url: SOCIAL.instagram, icon: <BrandInstagram size={30} />, cta: 'Follow us', text: 'Behind-the-scenes dum handis, daily reels and launch-day giveaways.' },
+  { name: 'YouTube', handle: '@Zayra-Biryani', url: SOCIAL.youtube, icon: <BrandYoutube size={32} />, cta: 'Subscribe', text: 'Watch our slow dum-cooking, spice blends and kitchen stories.' },
+  { name: 'Facebook', handle: 'Zayra Biryani', url: SOCIAL.facebook, icon: <BrandFacebook size={30} />, cta: 'Connect', text: 'Join our Bhubaneswar foodie circle for launch dates, events and catering.' },
+];
+
+const MARQUEE = ['Slow cooked', 'Richly spiced', 'Premium ingredients', 'Made fresh', 'Dough-sealed handis', 'Opening soon in Bhubaneswar'];
 
 export default function ComingSoon() {
+  const [webgl] = useState(hasWebGL);
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const plateRef = useRef<HTMLDivElement>(null);
+
+  // auto-advance the hero dish showcase
+  useEffect(() => {
+    if (paused) return;
+    const id = window.setInterval(() => setActive((a) => (a + 1) % PLATES.length), 4500);
+    return () => window.clearInterval(id);
+  }, [paused]);
+
+  // 3D tilt of the plate following the pointer
+  const onStageMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const el = plateRef.current;
+    if (!el || e.pointerType !== 'mouse') return;
+    const r = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    el.style.setProperty('--ry', `${x * 16}deg`);
+    el.style.setProperty('--rx', `${-y * 16}deg`);
+  };
+  const onStageLeave = () => {
+    plateRef.current?.style.setProperty('--ry', '0deg');
+    plateRef.current?.style.setProperty('--rx', '0deg');
+    setPaused(false);
+  };
   const [phone, setPhone] = useState('');
+  const [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
-  const socialLinks = [
-    {
-      name: 'Instagram',
-      handle: '@zayrabiryani',
-      desc: 'Behind-the-scenes dum handis, daily reels & launch giveaways.',
-      url: 'https://www.instagram.com/zayrabiryani/',
-      color: '#00754A',
-      icon: (
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-          <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-        </svg>
-      ),
-      badgeText: 'Follow us',
-    },
-    {
-      name: 'YouTube',
-      handle: '@Zayra-Biryani',
-      desc: 'Watch our slow dum-cooking methods, spice blends & kitchen stories.',
-      url: 'https://www.youtube.com/@Zayra-Biryani',
-      color: '#00754A',
-      icon: (
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
-          <polygon points="10 15 15 12 10 9 10 15" fill="currentColor" />
-        </svg>
-      ),
-      badgeText: 'Subscribe',
-    },
-    {
-      name: 'Facebook',
-      handle: 'Zayra Biryani',
-      desc: 'Join our Bhubaneswar foodie circle for events, launch dates & catering.',
-      url: 'https://www.facebook.com/people/Zayra-Biryani/61594579809671/',
-      color: '#00754A',
-      icon: (
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-        </svg>
-      ),
-      badgeText: 'Connect',
-    },
-  ];
+  // scroll reveal + 3D tilt for cards
+  useEffect(() => {
+    const els = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      }),
+      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' },
+    );
+    els.forEach((el) => io.observe(el));
+    // safety net: anything already scrolled past (fast flings, busy main thread) gets revealed too
+    let rafId = 0;
+    const sweep = () => {
+      rafId = 0;
+      const limit = window.innerHeight * 0.92;
+      els.forEach((el) => {
+        if (!el.classList.contains('in') && el.getBoundingClientRect().top < limit) {
+          el.classList.add('in');
+          io.unobserve(el);
+        }
+      });
+    };
+    const onScroll = () => { if (!rafId) rafId = requestAnimationFrame(sweep); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    const tilts = Array.from(document.querySelectorAll<HTMLElement>('.tilt'));
+    const move = (e: PointerEvent) => {
+      const el = e.currentTarget as HTMLElement;
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      el.style.setProperty('--ry', `${x * 10}deg`);
+      el.style.setProperty('--rx', `${-y * 10}deg`);
+    };
+    const leave = (e: PointerEvent) => {
+      const el = e.currentTarget as HTMLElement;
+      el.style.setProperty('--ry', '0deg');
+      el.style.setProperty('--rx', '0deg');
+    };
+    tilts.forEach((el) => {
+      el.addEventListener('pointermove', move);
+      el.addEventListener('pointerleave', leave);
+    });
+    return () => {
+      io.disconnect();
+      window.removeEventListener('scroll', onScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+      tilts.forEach((el) => {
+        el.removeEventListener('pointermove', move);
+        el.removeEventListener('pointerleave', leave);
+      });
+    };
+  }, []);
 
   const handleNotify = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phone || phone.trim().length < 10) return;
+    const digits = phone.replace(/\D/g, '').slice(-10);
+    if (!/^[6-9]\d{9}$/.test(digits)) {
+      setError('Please enter a valid 10-digit Indian mobile number.');
+      return;
+    }
+    setError('');
     setSubmitted(true);
   };
 
   return (
-    <div>
-      {/* ── 1. HERO SECTION WITH SUBTLE BIRYANI BACKGROUND (Screenshot 2 Match) ── */}
-      <section style={{
-        position: 'relative',
-        overflow: 'hidden',
-        padding: 'clamp(48px, 7vw, 84px) clamp(16px, 3.5vw, 40px) clamp(40px, 5vw, 64px)',
-        textAlign: 'center',
-      }}>
-        {/* Subtle Biryani Handi Background with Warm Overlay */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: `url(${heroBgImg})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          opacity: 0.12,
-          filter: 'grayscale(30%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }} />
+    <>
+      {/* ── HERO ── */}
+      <section className="hero">
+        <div className="hero-card">
+          <div className="hero-bgword" aria-hidden="true">Biryani</div>
 
-        {/* Soft gradient wash */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(180deg, rgba(242, 240, 235, 0.82) 0%, rgba(242, 240, 235, 0.96) 100%)',
-          pointerEvents: 'none',
-          zIndex: 1,
-        }} />
-
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: 920, margin: '0 auto' }}>
-          {/* Status indicator badge */}
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '6px 18px',
-            borderRadius: 'var(--r-pill)',
-            background: 'var(--green-light)',
-            color: 'var(--green-starbucks)',
-            marginBottom: 24,
-          }}>
-            <span style={{
-              width: 7,
-              height: 7,
-              borderRadius: '50%',
-              background: 'var(--green-accent)',
-              animation: 'pulseDot 2s infinite',
-            }} />
-            <span style={{ font: '700 12.5px/1 var(--sans)', letterSpacing: '-0.01em' }}>
-              Opening Soon in Bhubaneswar
-            </span>
-          </div>
-
-          {/* Primary Heading */}
-          <h1 style={{
-            font: '600 clamp(38px, 6vw, 68px)/1.12 var(--sans)',
-            letterSpacing: '-0.025em',
-            color: 'var(--green-starbucks)',
-            margin: '0 auto 20px',
-            maxWidth: 840,
-          }}>
-            Authentic Dum Biryani,<br />
-            <span style={{ color: 'var(--green-house)' }}>Crafted for Bhubaneswar.</span>
-          </h1>
-
-          {/* Subtitle */}
-          <p style={{
-            font: '400 clamp(16px, 1.8vw, 19px)/1.65 var(--sans)',
-            color: 'var(--text-black-soft)',
-            maxWidth: 680,
-            margin: '0 auto 30px',
-            letterSpacing: '-0.01em',
-          }}>
-            Sealed under dough in heavy handis, slow-cooked for 45 minutes with aged basmati, 
-            pure ghee, and aromatic spices. Fresh, piping hot pickup from our Bhubaneswar kitchen.
-          </p>
-
-          {/* Informational Store Status Card */}
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 10,
-            padding: '12px 24px',
-            borderRadius: 'var(--r-card)',
-            background: '#ffffff',
-            boxShadow: 'var(--shadow-card)',
-            color: 'var(--text-black)',
-            font: '600 clamp(12.5px, 1.5vw, 14px)/1.4 var(--sans)',
-            marginBottom: 34,
-            maxWidth: '100%',
-          }}>
-            <span style={{ color: 'var(--green-accent)', fontSize: 16 }}>⏳</span>
-            <span>Online ordering will go live on grand opening day. Follow our pages for the launch date!</span>
-          </div>
-
-          {/* Dual 50px Full-Pill CTAs */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: 14,
-            flexWrap: 'wrap',
-          }}>
-            <a
-              href="https://www.instagram.com/zayrabiryani/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary-green"
-              style={{ padding: '0 26px', height: 48, fontSize: 15 }}
-            >
-              Follow on Instagram
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                <path d="M7 17L17 7M17 7H7M17 7V17" />
-              </svg>
-            </a>
-
-            <a
-              href="https://www.youtube.com/@Zayra-Biryani"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-outlined-green"
-              style={{ padding: '0 26px', height: 48, fontSize: 15 }}
-            >
-              Subscribe on YouTube
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                <path d="M7 17L17 7M17 7H7M17 7V17" />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 2. HERO PAGE CENTERPIECE BANNER (Image 3 Showcase) ── */}
-      <section style={{
-        maxWidth: 1240,
-        margin: '0 auto 64px',
-        padding: '0 clamp(16px, 3.5vw, 40px)',
-      }}>
-        <div style={{
-          borderRadius: 'var(--r-card)',
-          overflow: 'hidden',
-          boxShadow: '0 16px 40px rgba(0, 0, 0, 0.16)',
-          border: '1px solid rgba(0, 0, 0, 0.08)',
-          background: '#000000',
-          position: 'relative',
-        }}>
-          <img
-            src={heroBannerImg}
-            alt="Zayra Biryani - More Than Biryani, A Better Story"
-            style={{
-              width: '100%',
-              height: 'auto',
-              maxHeight: '560px',
-              objectFit: 'cover',
-              display: 'block',
-            }}
-          />
-        </div>
-      </section>
-
-      {/* ── 3. CRAFT HIGHLIGHTS (DESIGN.md 12px Cards with Whisper Shadows) ── */}
-      <section style={{
-        maxWidth: 1240,
-        margin: '0 auto 64px',
-        padding: '0 clamp(16px, 3.5vw, 40px)',
-      }}>
-        <div style={{ textAlign: 'center', marginBottom: 36 }}>
-          <span style={{
-            font: '700 11.5px/1 var(--sans)',
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            color: 'var(--green-starbucks)',
-            display: 'block',
-            marginBottom: 8,
-          }}>
-            Authentic Hyderabadi Dum
-          </span>
-          <h2 style={{
-            font: '600 clamp(26px, 3.5vw, 36px)/1.2 var(--sans)',
-            letterSpacing: '-0.02em',
-            color: 'var(--text-black)',
-            margin: 0,
-          }}>
-            The Zayra Biryani Standards
-          </h2>
-        </div>
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: 20,
-        }}>
-          <div className="card-standard" style={{ padding: '28px' }}>
-            <div style={{
-              width: 44,
-              height: 44,
-              borderRadius: 'var(--r-pill)',
-              background: 'var(--green-light)',
-              color: 'var(--green-starbucks)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 20,
-              marginBottom: 16,
-            }}>
-              🏺
+          <div className="hero-copy">
+            <div className="badge-live rise-in">
+              <span className="dot" /> Opening soon · Bhubaneswar
             </div>
-            <h3 style={{ font: '600 18px var(--sans)', color: 'var(--text-black)', margin: '0 0 8px' }}>
-              Dough-Sealed Handis
-            </h3>
-            <p style={{ font: '400 14px/1.6 var(--sans)', color: 'var(--text-black-soft)', margin: 0 }}>
-              Every single handi is sealed with dough, locking essential spice aromatics and steam inside.
+            <h1 className="rise-in" style={{ '--d': '0.1s' } as React.CSSProperties}>
+              More than biryani.<br />
+              <em>A better story.</em>
+            </h1>
+            <p className="hero-lead rise-in" style={{ '--d': '0.2s' } as React.CSSProperties}>
+              Sealed under dough in traditional handis and slow-cooked for 45 minutes with aged basmati,
+              pure desi ghee and hand-ground spices. Our Bhubaneswar kitchen opens its doors very soon.
             </p>
-          </div>
-
-          <div className="card-standard" style={{ padding: '28px' }}>
-            <div style={{
-              width: 44,
-              height: 44,
-              borderRadius: 'var(--r-pill)',
-              background: 'var(--green-light)',
-              color: 'var(--green-starbucks)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 20,
-              marginBottom: 16,
-            }}>
-              🌾
+            <div className="hero-ctas rise-in" style={{ '--d': '0.3s' } as React.CSSProperties}>
+              <a className="btn btn-gold" href="#invite">
+                Get launch invite <IconArrow />
+              </a>
+              <a className="btn btn-ghost-light" href={SOCIAL.youtube} target="_blank" rel="noopener noreferrer">
+                <IconPlay size={18} /> Watch us cook
+              </a>
             </div>
-            <h3 style={{ font: '600 18px var(--sans)', color: 'var(--text-black)', margin: '0 0 8px' }}>
-              Aged Basmati & Pure Ghee
-            </h3>
-            <p style={{ font: '400 14px/1.6 var(--sans)', color: 'var(--text-black-soft)', margin: 0 }}>
-              Extra-long fragrant grains that stay separate and light, cooked in pure desi ghee without artificial essences.
-            </p>
-          </div>
-
-          <div className="card-standard" style={{ padding: '28px' }}>
-            <div style={{
-              width: 44,
-              height: 44,
-              borderRadius: 'var(--r-pill)',
-              background: 'var(--green-light)',
-              color: 'var(--green-starbucks)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 20,
-              marginBottom: 16,
-            }}>
-              ⚡
+            <div className="hero-stats rise-in" style={{ '--d': '0.4s' } as React.CSSProperties}>
+              <div><b>45 min</b><span>Slow dum<br />on low flame</span></div>
+              <div><b>100%</b><span>Pure desi<br />ghee</span></div>
+              <div><b>5</b><span>Signature<br />handis</span></div>
             </div>
-            <h3 style={{ font: '600 18px var(--sans)', color: 'var(--text-black)', margin: '0 0 8px' }}>
-              Pre-Order & Hot Pickup
-            </h3>
-            <p style={{ font: '400 14px/1.6 var(--sans)', color: 'var(--text-black-soft)', margin: 0 }}>
-              Order ahead when we launch, receive a pickup code, and collect your steaming hot handi right on arrival.
-            </p>
           </div>
 
-          <div className="card-standard" style={{ padding: '28px' }}>
-            <div style={{
-              width: 44,
-              height: 44,
-              borderRadius: 'var(--r-pill)',
-              background: 'var(--gold-lightest)',
-              color: 'var(--gold)',
-              border: '1px solid var(--gold)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 20,
-              marginBottom: 16,
-            }}>
-              ★
-            </div>
-            <h3 style={{ font: '600 18px var(--sans)', color: 'var(--text-black)', margin: '0 0 8px' }}>
-              Biryani Coins Rewards
-            </h3>
-            <p style={{ font: '400 14px/1.6 var(--sans)', color: 'var(--text-black-soft)', margin: 0 }}>
-              Earn coins on every order. Redeem 200 coins for a complimentary Mini Dum Handi on the house.
-            </p>
-          </div>
-        </div>
-      </section>
+          <div className="hero-stage" onPointerMove={onStageMove} onPointerEnter={() => setPaused(true)} onPointerLeave={onStageLeave}>
+            <div className="hero-orb" />
+            <div className="hero-ring" />
 
-      {/* ── 4. OFFICIAL SOCIAL COMMUNITY ── */}
-      <section style={{
-        maxWidth: 1240,
-        margin: '0 auto 64px',
-        padding: '0 clamp(16px, 3.5vw, 40px)',
-      }}>
-        <div style={{ textAlign: 'center', marginBottom: 36 }}>
-          <span style={{
-            font: '700 11.5px/1 var(--sans)',
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            color: 'var(--green-starbucks)',
-            display: 'block',
-            marginBottom: 8,
-          }}>
-            Official Pages
-          </span>
-          <h2 style={{
-            font: '600 clamp(26px, 3.5vw, 36px)/1.2 var(--sans)',
-            letterSpacing: '-0.02em',
-            color: 'var(--text-black)',
-            margin: 0,
-          }}>
-            Join the Zayra Biryani Community
-          </h2>
-        </div>
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))',
-          gap: 20,
-        }}>
-          {socialLinks.map((item) => (
-            <a
-              key={item.name}
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="card-standard"
-              style={{
-                padding: '28px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                textDecoration: 'none',
-              }}
-            >
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                  <div style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 'var(--r-card)',
-                    background: 'var(--green-light)',
-                    color: item.color,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    {item.icon}
-                  </div>
-                  <span style={{
-                    font: '700 12px var(--sans)',
-                    color: 'var(--green-starbucks)',
-                    background: 'var(--green-light)',
-                    padding: '4px 12px',
-                    borderRadius: 'var(--r-pill)',
-                  }}>
-                    {item.name}
-                  </span>
-                </div>
-
-                <h3 style={{ font: '700 18px var(--sans)', color: 'var(--text-black)', margin: '0 0 6px' }}>
-                  {item.handle}
-                </h3>
-                <p style={{ font: '400 14px/1.55 var(--sans)', color: 'var(--text-black-soft)', margin: 0 }}>
-                  {item.desc}
-                </p>
+            <div className="plate-wrap" ref={plateRef}>
+              <div className="plate-float">
+                {PLATES.map((p, i) => (
+                  <img
+                    key={p.name}
+                    src={p.img}
+                    alt={i === active ? p.name : ''}
+                    className={`plate${i === active ? ' on' : ''}`}
+                    draggable={false}
+                    fetchPriority={i === 0 ? 'high' : 'low'}
+                  />
+                ))}
               </div>
+            </div>
 
-              <div style={{
-                marginTop: 20,
-                paddingTop: 14,
-                borderTop: '1px solid rgba(0,0,0,0.06)',
-                font: '700 13px var(--sans)',
-                color: 'var(--green-accent)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-              }}>
-                {item.badgeText} →
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
+            {webgl ? (
+              <Suspense fallback={null}>
+                <SpiceScene className="hero-canvas" />
+              </Suspense>
+            ) : null}
 
-      {/* ── 5. VIP LAUNCH PERK BAND ── */}
-      <section style={{
-        maxWidth: 1240,
-        margin: '0 auto 80px',
-        padding: '0 clamp(16px, 3.5vw, 40px)',
-      }}>
-        <div style={{
-          background: 'var(--gold-lightest)',
-          border: '1px solid rgba(203, 162, 88, 0.4)',
-          borderRadius: 'var(--r-card)',
-          boxShadow: 'var(--shadow-card)',
-          padding: 'clamp(32px, 5vw, 56px)',
-          textAlign: 'center',
-        }}>
-          <div style={{ maxWidth: 640, margin: '0 auto' }}>
-            <span className="pill-gold-badge" style={{ marginBottom: 14 }}>
-              ★ Inaugural Launch Perk
-            </span>
-            <h2 style={{
-              font: '600 clamp(26px, 3.5vw, 36px)/1.2 var(--sans)',
-              letterSpacing: '-0.02em',
-              color: 'var(--text-black)',
-              margin: '8px 0 12px',
-            }}>
-              Be the First to Taste in Bhubaneswar
-            </h2>
-            <p style={{
-              font: '400 15px/1.65 var(--sans)',
-              color: 'var(--text-black-soft)',
-              marginBottom: 28,
-            }}>
-              Enter your mobile number to receive an opening day VIP invite, 
-              a <strong>₹100 inaugural voucher</strong>, and early-bird Biryani Coins.
-            </p>
+            <div className="chip-float chip-a">
+              <div className="ci"><IconSeal size={20} /></div>
+              <div><b>Dough-sealed</b><span>Every single handi</span></div>
+            </div>
 
-            {submitted ? (
-              <div style={{
-                background: 'var(--green-light)',
-                border: '1px solid var(--green-accent)',
-                borderRadius: 'var(--r-pill)',
-                padding: '16px 28px',
-                color: 'var(--green-starbucks)',
-                font: '700 14px var(--sans)',
-              }}>
-                ✨ Thank you! You are on our Bhubaneswar VIP list. We will notify you on launch day!
-              </div>
-            ) : (
-              <form onSubmit={handleNotify} style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
-                <input
-                  type="tel"
-                  placeholder="Enter 10-digit mobile number"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  maxLength={13}
-                  style={{
-                    flex: '1 1 260px',
-                    maxWidth: 360,
-                    height: 48,
-                    background: '#ffffff',
-                    border: '1px solid var(--input-border)',
-                    borderRadius: 'var(--r-pill)',
-                    padding: '0 20px',
-                    color: 'var(--text-black)',
-                    font: '600 14.5px var(--sans)',
-                    outline: 'none',
-                  }}
-                  onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--green-accent)')}
-                  onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--input-border)')}
-                />
+            <div className="plate-caption" aria-live="polite">
+              <span className={`veg-tag ${PLATES[active].veg ? 'veg' : 'nonveg'}`}><i />{PLATES[active].veg ? 'Veg' : 'Non-veg'}</span>
+              <b key={active}>{PLATES[active].name}</b>
+            </div>
+
+            <div className="plate-dots" role="tablist" aria-label="Choose a biryani">
+              {PLATES.map((p, i) => (
                 <button
-                  type="submit"
-                  className="btn-primary-green"
-                  style={{ height: 48, padding: '0 28px' }}
-                >
-                  Get Launch Invite
-                </button>
-              </form>
-            )}
+                  key={p.name}
+                  role="tab"
+                  aria-selected={i === active}
+                  aria-label={p.name}
+                  className={i === active ? 'on' : ''}
+                  onClick={() => { setActive(i); setPaused(true); }}
+                />
+              ))}
+            </div>
+          </div>
 
-            <div style={{ marginTop: 18, font: '400 12px var(--sans)', color: 'var(--text-black-soft)' }}>
-              🔒 No spam. Only official opening day invite and voucher.
+          <a href="#craft" className="scroll-cue" aria-label="Scroll to our craft">
+            <i /> Scroll
+          </a>
+        </div>
+      </section>
+
+      {/* ── MARQUEE ── */}
+      <div className="marquee" aria-hidden="true">
+        <div className="marquee-track">
+          {[...MARQUEE, ...MARQUEE, ...MARQUEE, ...MARQUEE].map((t, i) => <span key={i}>{t}</span>)}
+        </div>
+      </div>
+
+      {/* ── CRAFT ── */}
+      <section className="section" id="craft">
+        <div className="wrap">
+          <div className="sec-head">
+            <div data-reveal>
+              <span className="eyebrow-new">The Zayra way</span>
+              <h2 className="h2">Four steps.<br /><em>Zero shortcuts.</em></h2>
+            </div>
+            <p data-reveal style={{ '--d': '0.1s' } as React.CSSProperties}>
+              Real dum biryani can’t be rushed. This is the slow, old-school process behind every handi that leaves our kitchen.
+            </p>
+          </div>
+          <div className="steps">
+            {STEPS.map((s, i) => (
+              <article key={s.n} className="step tilt" data-reveal style={{ '--d': `${i * 0.08}s` } as React.CSSProperties}>
+                <div className="step-num">{s.n}</div>
+                <div className="step-icon">{s.icon}</div>
+                <h3>{s.title}</h3>
+                <p>{s.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── MENU PREVIEW ── */}
+      <section className="section menu-sec" id="menu">
+        <div className="wrap">
+          <div className="sec-head">
+            <div data-reveal>
+              <span className="eyebrow-new">First on the menu</span>
+              <h2 className="h2">Five handis,<br /><em>ready for launch.</em></h2>
+            </div>
+            <p data-reveal style={{ '--d': '0.1s' } as React.CSSProperties}>
+              Veg and non-veg, each one dum-cooked to order. Online ordering opens on launch day.
+            </p>
+          </div>
+          <div className="dishes">
+            {DISHES.map((d, i) => (
+              <article key={d.name} className="dish tilt" data-reveal style={{ '--d': `${i * 0.07}s` } as React.CSSProperties}>
+                <div className="dish-img">
+                  <span className={`veg-tag ${d.veg ? 'veg' : 'nonveg'}`}><i />{d.veg ? 'Veg' : 'Non-veg'}</span>
+                  <img src={d.img} alt={d.name} loading="lazy" />
+                </div>
+                <div className="dish-body">
+                  <h3>{d.name}</h3>
+                  <p>{d.text}</p>
+                  <div className="dish-soon">Coming soon</div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── STORY ── */}
+      <section className="section story-sec" id="story">
+        <div className="wrap">
+          <div className="sec-head">
+            <div data-reveal>
+              <span className="eyebrow-new">Our story</span>
+              <h2 className="h2">Hyderabad’s soul,<br /><em>cooked in Bhubaneswar.</em></h2>
+            </div>
+            <p data-reveal style={{ '--d': '0.1s' } as React.CSSProperties}>
+              Zayra started with a simple belief: biryani deserves patience. We brought the Hyderabadi
+              dum tradition home to Odisha — the sealed handi, the slow flame, the hand-ground spices — so
+              every order tastes like it came from a family kitchen.
+            </p>
+          </div>
+          <div className="story-frame" data-reveal="zoom">
+            <div className="frame">
+              <img src={storyImg} alt="Hyderabadi dum biryani served with mirchi ka salan, raita and salad" loading="lazy" width={2000} height={800} />
+            </div>
+          </div>
+          <div className="pillars">
+            {[
+              { t: 'Slow cooked', i: <IconClock size={19} /> },
+              { t: 'Richly spiced', i: <IconFlame size={19} /> },
+              { t: 'Premium ingredients', i: <IconStar size={19} /> },
+              { t: 'Made fresh', i: <IconHeart size={19} /> },
+            ].map((p, i) => (
+              <div className="pillar" key={p.t} data-reveal style={{ '--d': `${i * 0.06}s` } as React.CSSProperties}>
+                <span>{p.i}</span>{p.t}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── LAUNCH INVITE ── */}
+      <section id="invite" style={{ scrollMarginTop: 76 }}>
+        <div className="wrap">
+          <div className="invite" data-reveal="zoom">
+            <div>
+              <span className="eyebrow-new">Inaugural launch perk</span>
+              <h2 className="h2">First taste,<br /><em>first in line.</em></h2>
+              <p className="invite-lead">Join the opening-day list for our Bhubaneswar kitchen and unlock:</p>
+              <ul className="perks">
+                <li><span><IconGift /></span> ₹100 inaugural voucher</li>
+                <li><span><IconStar size={15} /></span> VIP invite for opening day</li>
+                <li><span><IconBowl size={16} /></span> Early-bird Biryani Coins</li>
+              </ul>
+            </div>
+
+            <div className="invite-card">
+              {submitted ? (
+                <div className="success" role="status">
+                  <div className="tick"><IconCheck size={28} /></div>
+                  <h3>You’re on the list!</h3>
+                  <p style={{ margin: 0, color: 'var(--ink-soft)' }}>We’ll message you on launch day with your VIP invite and voucher.</p>
+                </div>
+              ) : (
+                <form onSubmit={handleNotify} noValidate>
+                  <h3>Get your launch invite</h3>
+                  <p>Drop your number — we’ll only message you about opening day.</p>
+                  <label className="phone-field">
+                    <b>+91</b>
+                    <input
+                      type="tel"
+                      inputMode="numeric"
+                      autoComplete="tel-national"
+                      placeholder="Mobile number"
+                      aria-label="Mobile number"
+                      value={phone}
+                      maxLength={14}
+                      onChange={(e) => { setPhone(e.target.value); if (error) setError(''); }}
+                    />
+                  </label>
+                  {error ? <div className="err" role="alert">{error}</div> : null}
+                  <button type="submit" className="btn btn-emerald">
+                    Reserve my invite <IconArrow />
+                  </button>
+                  <div className="fine"><IconLock /> No spam. Only the opening-day invite and voucher.</div>
+                </form>
+              )}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── 6. FLOATING FRAP CIRCULAR CTA ── */}
-      <a
-        href="https://www.instagram.com/zayrabiryani/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="frap-floating-btn"
-        title="Follow Zayra Biryani on Instagram"
-      >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-          <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-          <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-        </svg>
+      {/* ── COMMUNITY ── */}
+      <section className="section" id="community" style={{ paddingBottom: 0 }}>
+        <div className="wrap">
+          <div className="sec-head">
+            <div data-reveal>
+              <span className="eyebrow-new">Official pages</span>
+              <h2 className="h2">Join the <em>Zayra</em> circle.</h2>
+            </div>
+            <p data-reveal style={{ '--d': '0.1s' } as React.CSSProperties}>
+              Launch dates, sneak peeks from the kitchen and giveaways — follow along so you don’t miss opening day.
+            </p>
+          </div>
+          <div className="socials">
+            {SOCIALS.map((s, i) => (
+              <a key={s.name} href={s.url} target="_blank" rel="noopener noreferrer" className="social tilt" data-reveal style={{ '--d': `${i * 0.08}s` } as React.CSSProperties}>
+                <div className="s-ic">{s.icon}</div>
+                <h3>{s.handle}</h3>
+                <p>{s.text}</p>
+                <span className="go">{s.cta} on {s.name} <IconArrowUR /></span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <a href={SOCIAL.instagram} target="_blank" rel="noopener noreferrer" className="fab" aria-label="Follow Zayra Biryani on Instagram">
+        <BrandInstagram size={30} />
       </a>
-    </div>
+    </>
   );
 }
