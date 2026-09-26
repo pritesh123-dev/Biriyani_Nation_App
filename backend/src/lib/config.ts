@@ -105,13 +105,13 @@ export const DEFAULT_CONFIG: StoreConfig = {
   updatedAt: new Date(0).toISOString(),
 
   brand: {
-    name: 'BiriyaniNation',
+    name: 'Zayra Biryani',
     tagline: 'Sealed with dough. Dum-cooked 45 minutes. Collected hot from our counter.',
     established: 'Est. 2024 · Bhubaneswar',
   },
 
   store: {
-    name: 'BiriyaniNation Kitchen',
+    name: 'Zayra Biryani Kitchen',
     addressLine1: 'Plot 42, Patia Square',
     addressLine2: 'Bhubaneswar, Odisha 751024',
     mapsUrl: 'https://maps.google.com/?q=Patia+Square+Bhubaneswar',
@@ -201,8 +201,8 @@ export const DEFAULT_CONFIG: StoreConfig = {
   payments: {
     payAtCounter: true,
     upi: true,
-    upiId: 'biriyanination@okaxis',
-    upiPayeeName: 'BiriyaniNation',
+    upiId: 'zayrabiryani@okaxis',
+    upiPayeeName: 'Zayra Biryani',
   },
 
   referral: {

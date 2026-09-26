@@ -1,16 +1,8 @@
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { useApp } from '../lib/store';
-import { CoinBadge, rupees } from './ui';
-
-const NAV_LINKS = [
-  { to: '/menu', label: 'Menu' },
-  { to: '/party', label: 'Party catering' },
-  { to: '/refer', label: 'Refer' },
-];
 
 export default function Layout() {
-  const { config, user, signedIn, cartCount, cartEstimate } = useApp();
-  const navigate = useNavigate();
+  const { config } = useApp();
 
   return (
     <div style={{
@@ -22,83 +14,77 @@ export default function Layout() {
         background: 'rgba(11,9,6,.85)', backdropFilter: 'blur(16px)',
         borderBottom: '1px solid rgba(227,174,78,.16)',
       }}>
-        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '12px clamp(14px,3vw,32px) 0' }}>
-          {/* Row 1: identity + actions — always a single line, never wraps. */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <Link to="/" style={{
-              font: '400 clamp(19px,2.2vw,25px)/1 "Instrument Serif",serif',
-              color: 'var(--text)', letterSpacing: '.3px', whiteSpace: 'nowrap', flex: 'none',
-            }}>
-              Biriyani<span style={{ color: 'var(--gold)' }}>Nation</span>
-            </Link>
-
-            <div style={{ flex: 1, minWidth: 0 }} />
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 'none' }}>
-              {signedIn ? (
-                <button
-                  onClick={() => navigate('/account')}
-                  style={{ border: 0, background: 'transparent', cursor: 'pointer', padding: 0 }}
-                >
-                  <CoinBadge coins={user?.coins ?? 0} />
-                </button>
-              ) : (
-                <>
-                  <Link to="/login" className="ghost-btn" style={{
-                    height: 38, padding: '0 13px', display: 'inline-flex',
-                    alignItems: 'center', font: '700 12px Manrope,sans-serif', whiteSpace: 'nowrap',
-                  }}>
-                    Sign in
-                  </Link>
-                  <Link to="/signup" style={{
-                    height: 38, padding: '0 13px', display: 'inline-flex',
-                    alignItems: 'center', font: '700 12px Manrope,sans-serif', whiteSpace: 'nowrap',
-                    borderRadius: 'var(--r-lg)', border: '1px solid var(--gold-line-50)',
-                    color: 'var(--gold-soft)',
-                  }}>
-                    Sign up
-                  </Link>
-                </>
-              )}
-              <Link
-                to="/cart"
-                className="gold-btn"
-                style={{ height: 38, padding: '0 14px', font: '800 12px Manrope,sans-serif', whiteSpace: 'nowrap' }}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--on-gold)" strokeWidth={2}>
-                  <path d="M5 7h14l-1.4 12H6.4z" />
-                  <path d="M9 7V5a3 3 0 0 1 6 0v2" />
-                </svg>
-                Cart {cartCount > 0 ? `· ${rupees(cartEstimate)}` : ''}
-              </Link>
-            </div>
-          </div>
-
-          {/* Row 2: section nav — scrolls horizontally on narrow screens
-              instead of wrapping into a cluttered second/third line. */}
-          <nav className="header-nav-scroll" style={{
-            display: 'flex', alignItems: 'center', gap: 'clamp(14px,2vw,24px)',
-            overflowX: 'auto', marginTop: 10, paddingBottom: 11,
+        <div style={{ maxWidth: 1120, margin: '0 auto', padding: '14px clamp(16px,3vw,32px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+          <Link to="/" style={{
+            font: '400 clamp(22px,2.6vw,30px)/1 "Instrument Serif",serif',
+            color: 'var(--text)', letterSpacing: '.4px', whiteSpace: 'nowrap', flex: 'none',
           }}>
-            {NAV_LINKS.filter((l) =>
-              l.to === '/party' ? config?.party.enabled !== false
-                : l.to === '/refer' ? config?.referral.enabled !== false
-                : true,
-            ).map((l) => (
-              <NavLink
-                key={l.to}
-                to={l.to}
-                style={({ isActive }) => ({
-                  padding: '3px 0', font: '600 13px Manrope,sans-serif', flex: 'none',
-                  whiteSpace: 'nowrap',
-                  color: isActive ? 'var(--gold)' : 'var(--text-70)',
-                  borderBottom: isActive ? '2px solid var(--gold)' : '2px solid transparent',
-                })}
-              >
-                {l.label}
-              </NavLink>
-            ))}
-          </nav>
+            Zayra<span style={{ color: 'var(--gold)' }}>Biryani</span>
+          </Link>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <span style={{
+              font: '700 11.5px/1 var(--sans)',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: 'var(--gold-soft)',
+              background: 'rgba(227,174,78,0.1)',
+              border: '1px solid rgba(227,174,78,0.25)',
+              padding: '6px 12px',
+              borderRadius: 'var(--r-pill)',
+              display: 'none',
+            }} className="location-pill-desktop">
+              📍 Bhubaneswar
+            </span>
+
+            <a
+              href="https://www.instagram.com/zayrabiryani/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                padding: '6px 14px',
+                borderRadius: 'var(--r-pill)',
+                background: 'linear-gradient(135deg, rgba(225,48,108,0.15), rgba(131,58,180,0.15))',
+                border: '1px solid rgba(225,48,108,0.35)',
+                color: '#F48FB1',
+                font: '700 12px Manrope,sans-serif',
+                textDecoration: 'none',
+              }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+              </svg>
+              Instagram
+            </a>
+
+            <a
+              href="https://www.youtube.com/@Zayra-Biryani"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                padding: '6px 14px',
+                borderRadius: 'var(--r-pill)',
+                background: 'rgba(255,0,0,0.12)',
+                border: '1px solid rgba(255,0,0,0.3)',
+                color: '#FF8A80',
+                font: '700 12px Manrope,sans-serif',
+                textDecoration: 'none',
+              }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
+                <polygon points="10 15 15 12 10 9 10 15" fill="currentColor" />
+              </svg>
+              YouTube
+            </a>
+          </div>
         </div>
       </header>
 
@@ -108,9 +94,39 @@ export default function Layout() {
 
       <footer style={{
         borderTop: '1px solid var(--hair-soft)', padding: '28px clamp(16px,3vw,32px) 40px',
-        textAlign: 'center', font: '500 11px Manrope,sans-serif', color: 'var(--text-30)',
+        textAlign: 'center', font: '500 12px Manrope,sans-serif', color: 'var(--text-45)',
       }}>
-        {config?.brand.name ?? 'BiriyaniNation'} · {config?.store.addressLine1} · pickup only
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 18, marginBottom: 14, flexWrap: 'wrap' }}>
+          <a
+            href="https://www.instagram.com/zayrabiryani/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'var(--text-70)', font: '600 12px Manrope,sans-serif', display: 'inline-flex', alignItems: 'center', gap: 5 }}
+          >
+            Instagram
+          </a>
+          <span style={{ color: 'var(--hair)' }}>•</span>
+          <a
+            href="https://www.youtube.com/@Zayra-Biryani"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'var(--text-70)', font: '600 12px Manrope,sans-serif', display: 'inline-flex', alignItems: 'center', gap: 5 }}
+          >
+            YouTube
+          </a>
+          <span style={{ color: 'var(--hair)' }}>•</span>
+          <a
+            href="https://www.facebook.com/people/Zayra-Biryani/61594579809671/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'var(--text-70)', font: '600 12px Manrope,sans-serif', display: 'inline-flex', alignItems: 'center', gap: 5 }}
+          >
+            Facebook
+          </a>
+        </div>
+        <div>
+          {config?.brand.name ?? 'Zayra Biryani'} · {config?.store.addressLine1 ?? 'Patia Square, Bhubaneswar'} · Opening in Bhubaneswar · pickup only
+        </div>
       </footer>
     </div>
   );

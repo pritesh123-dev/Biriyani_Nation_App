@@ -66,10 +66,10 @@ async function sendWhatsApp(phone: string, code: string): Promise<void> {
 async function sendSms(phone: string, code: string): Promise<void> {
   // Message text must match a DLT-approved template exactly, or Indian
   // carriers silently drop it.
-  const senderId = process.env.SMS_SENDER_ID || 'BRYNTN';
+  const senderId = process.env.SMS_SENDER_ID || 'ZYRBRY';
   await sns.send(new PublishCommand({
     PhoneNumber: phone,
-    Message: `${code} is your BiriyaniNation verification code. Valid for 5 minutes. Do not share it with anyone.`,
+    Message: `${code} is your Zayra Biryani verification code. Valid for 5 minutes. Do not share it with anyone.`,
     MessageAttributes: {
       'AWS.SNS.SMS.SMSType':   { DataType: 'String', StringValue: 'Transactional' },
       'AWS.SNS.SMS.SenderID':  { DataType: 'String', StringValue: senderId },

@@ -43,7 +43,7 @@ export default function AuthHero() {
           </Text>
         </View>
         <Text style={{ fontFamily: F.serif, fontSize: 46, lineHeight: 46, color: C.text }}>
-          Biriyani{'\n'}<Text style={{ color: C.gold }}>Nation</Text>
+          Zayra{'\n'}<Text style={{ color: C.gold }}>Biryani</Text>
         </Text>
         <Text style={[S.body, { maxWidth: 280 }]}>
           {brand?.tagline ?? 'Sealed with dough. Dum-cooked 45 minutes. Collected hot from our counter.'}

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BiriyaniNation Kitchen</title>
+<title>Zayra Biryani Kitchen</title>
 <style>
   :root{
     --bg:#0B0906; --surface:#100C07; --card:#1A140D; --well:#241C12;
@@ -67,7 +67,7 @@
 </head>
 <body>
 
-<h1>Biriyani<span>Nation</span> · Kitchen</h1>
+<h1>Zayra<span>Biryani</span> · Kitchen</h1>
 <p class="muted" style="margin-top:6px">Change prices, dishes and photos here. The app picks them up on next launch — no new build.</p>
 
 <!-- Sign in -->
@@ -555,7 +555,7 @@ $('exportCustomers').onclick = () => {
   const csv = rows.map((r) => r.map((v) => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-  a.download = `biriyaninnation-customers-${$('custDay').value}.csv`;
+  a.download = `zayrabiryani-customers-${$('custDay').value}.csv`;
   a.click();
 };
 

@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "BiriyaniNation",
-    "slug": "biriyani-nation",
+    "name": "Zayra Biryani",
+    "slug": "zayra-biryani",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "biriyanination",
+    "scheme": "zayrabiryani",
     "userInterfaceStyle": "dark",
     "icon": "./assets/icon.png",
     "splash": {
@@ -17,18 +17,18 @@
     ],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "in.biriyanination.app",
+      "bundleIdentifier": "in.zayrabiryani.app",
       "buildNumber": "1",
       "config": {
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "CFBundleDisplayName": "BiriyaniNation",
+        "CFBundleDisplayName": "Zayra Biryani",
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
-      "package": "in.biriyanination.app",
+      "package": "in.zayrabiryani.app",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

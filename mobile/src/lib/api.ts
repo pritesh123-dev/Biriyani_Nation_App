@@ -83,7 +83,7 @@ async function request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
     if ((err as Error).name === 'AbortError') {
       throw new ApiError('That took too long. Check your connection and try again.', 0);
     }
-    throw new ApiError('Cannot reach BiriyaniNation. Check your connection.', 0);
+    throw new ApiError('Cannot reach Zayra Biryani. Check your connection.', 0);
   }
   clearTimeout(timer);
 
