@@ -6,34 +6,50 @@ export default function Layout() {
 
   return (
     <div style={{
-      minHeight: '100vh', display: 'flex', flexDirection: 'column',
-      background: 'radial-gradient(1200px 720px at 78% -12%, rgba(227,174,78,.12), transparent 62%), var(--bg)',
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      background: 'radial-gradient(1200px 720px at 78% -12%, rgba(240,184,77,.18), transparent 65%), var(--bg)',
     }}>
       <header style={{
-        position: 'sticky', top: 0, zIndex: 30,
-        background: 'rgba(11,9,6,.85)', backdropFilter: 'blur(16px)',
-        borderBottom: '1px solid rgba(227,174,78,.16)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 30,
+        background: 'rgba(250, 247, 242, 0.88)',
+        backdropFilter: 'blur(16px)',
+        borderBottom: '1px solid rgba(184, 128, 24, 0.16)',
+        boxShadow: '0 2px 14px rgba(0, 0, 0, 0.03)',
       }}>
-        <div style={{ maxWidth: 1120, margin: '0 auto', padding: '14px clamp(16px,3vw,32px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+        <div style={{
+          maxWidth: 1120,
+          margin: '0 auto',
+          padding: '14px clamp(16px,3vw,32px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 16,
+        }}>
           <Link to="/" style={{
             font: '400 clamp(22px,2.6vw,30px)/1 "Instrument Serif",serif',
-            color: 'var(--text)', letterSpacing: '.4px', whiteSpace: 'nowrap', flex: 'none',
+            color: 'var(--text)',
+            letterSpacing: '.4px',
+            whiteSpace: 'nowrap',
+            flex: 'none',
           }}>
             Zayra<span style={{ color: 'var(--gold)' }}>Biryani</span>
           </Link>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span style={{
               font: '700 11.5px/1 var(--sans)',
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
-              color: 'var(--gold-soft)',
-              background: 'rgba(227,174,78,0.1)',
-              border: '1px solid rgba(227,174,78,0.25)',
-              padding: '6px 12px',
+              color: 'var(--gold)',
+              background: 'rgba(184, 128, 24, 0.1)',
+              border: '1px solid rgba(184, 128, 24, 0.25)',
+              padding: '6px 14px',
               borderRadius: 'var(--r-pill)',
-              display: 'none',
-            }} className="location-pill-desktop">
+            }}>
               📍 Bhubaneswar
             </span>
 
@@ -45,13 +61,14 @@ export default function Layout() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 6,
-                padding: '6px 14px',
+                padding: '7px 14px',
                 borderRadius: 'var(--r-pill)',
-                background: 'linear-gradient(135deg, rgba(225,48,108,0.15), rgba(131,58,180,0.15))',
-                border: '1px solid rgba(225,48,108,0.35)',
-                color: '#F48FB1',
+                background: 'linear-gradient(135deg, rgba(225,48,108,0.1), rgba(131,58,180,0.1))',
+                border: '1px solid rgba(225,48,108,0.28)',
+                color: '#C13584',
                 font: '700 12px Manrope,sans-serif',
                 textDecoration: 'none',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
               }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -69,13 +86,14 @@ export default function Layout() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 6,
-                padding: '6px 14px',
+                padding: '7px 14px',
                 borderRadius: 'var(--r-pill)',
-                background: 'rgba(255,0,0,0.12)',
-                border: '1px solid rgba(255,0,0,0.3)',
-                color: '#FF8A80',
+                background: 'rgba(255,0,0,0.08)',
+                border: '1px solid rgba(255,0,0,0.25)',
+                color: '#D32F2F',
                 font: '700 12px Manrope,sans-serif',
                 textDecoration: 'none',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
               }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -93,15 +111,19 @@ export default function Layout() {
       </main>
 
       <footer style={{
-        borderTop: '1px solid var(--hair-soft)', padding: '28px clamp(16px,3vw,32px) 40px',
-        textAlign: 'center', font: '500 12px Manrope,sans-serif', color: 'var(--text-45)',
+        borderTop: '1px solid var(--hair)',
+        padding: '32px clamp(16px,3vw,32px) 44px',
+        textAlign: 'center',
+        font: '500 12.5px Manrope,sans-serif',
+        color: 'var(--text-55)',
+        background: 'var(--surface)',
       }}>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 18, marginBottom: 14, flexWrap: 'wrap' }}>
           <a
             href="https://www.instagram.com/zayrabiryani/"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: 'var(--text-70)', font: '600 12px Manrope,sans-serif', display: 'inline-flex', alignItems: 'center', gap: 5 }}
+            style={{ color: 'var(--text-70)', font: '700 12px Manrope,sans-serif', display: 'inline-flex', alignItems: 'center', gap: 5 }}
           >
             Instagram
           </a>
@@ -110,7 +132,7 @@ export default function Layout() {
             href="https://www.youtube.com/@Zayra-Biryani"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: 'var(--text-70)', font: '600 12px Manrope,sans-serif', display: 'inline-flex', alignItems: 'center', gap: 5 }}
+            style={{ color: 'var(--text-70)', font: '700 12px Manrope,sans-serif', display: 'inline-flex', alignItems: 'center', gap: 5 }}
           >
             YouTube
           </a>
@@ -119,7 +141,7 @@ export default function Layout() {
             href="https://www.facebook.com/people/Zayra-Biryani/61594579809671/"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: 'var(--text-70)', font: '600 12px Manrope,sans-serif', display: 'inline-flex', alignItems: 'center', gap: 5 }}
+            style={{ color: 'var(--text-70)', font: '700 12px Manrope,sans-serif', display: 'inline-flex', alignItems: 'center', gap: 5 }}
           >
             Facebook
           </a>

@@ -11,9 +11,9 @@ export default function ComingSoon() {
       handle: '@zayrabiryani',
       desc: 'Behind-the-scenes dum handis, daily reels & launch giveaways.',
       url: 'https://www.instagram.com/zayrabiryani/',
-      color: '#E1306C',
-      bgGradient: 'linear-gradient(135deg, rgba(225,48,108,0.18), rgba(131,58,180,0.18))',
-      border: 'rgba(225,48,108,0.3)',
+      color: '#C13584',
+      bgGradient: 'linear-gradient(135deg, rgba(225,48,108,0.08), rgba(131,58,180,0.06))',
+      border: 'rgba(225,48,108,0.22)',
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
@@ -28,9 +28,9 @@ export default function ComingSoon() {
       handle: '@Zayra-Biryani',
       desc: 'Watch our slow dum-cooking methods, spice blends & kitchen stories.',
       url: 'https://www.youtube.com/@Zayra-Biryani',
-      color: '#FF0000',
-      bgGradient: 'linear-gradient(135deg, rgba(255,0,0,0.18), rgba(200,20,20,0.1))',
-      border: 'rgba(255,0,0,0.3)',
+      color: '#D32F2F',
+      bgGradient: 'linear-gradient(135deg, rgba(255,0,0,0.08), rgba(200,20,20,0.05))',
+      border: 'rgba(211,47,47,0.22)',
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
@@ -45,8 +45,8 @@ export default function ComingSoon() {
       desc: 'Join our Bhubaneswar foodie circle for events, launch dates & catering.',
       url: 'https://www.facebook.com/people/Zayra-Biryani/61594579809671/',
       color: '#1877F2',
-      bgGradient: 'linear-gradient(135deg, rgba(24,119,242,0.18), rgba(15,80,180,0.12))',
-      border: 'rgba(24,119,242,0.3)',
+      bgGradient: 'linear-gradient(135deg, rgba(24,119,242,0.08), rgba(15,80,180,0.05))',
+      border: 'rgba(24,119,242,0.22)',
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
@@ -76,7 +76,7 @@ export default function ComingSoon() {
           transform: 'translateX(-50%)',
           width: 'clamp(280px, 60vw, 540px)',
           height: '240px',
-          background: 'radial-gradient(circle, rgba(227,174,78,0.22) 0%, rgba(227,174,78,0) 70%)',
+          background: 'radial-gradient(circle, rgba(240,184,77,0.28) 0%, rgba(240,184,77,0) 70%)',
           pointerEvents: 'none',
           zIndex: 0,
         }} />
@@ -88,23 +88,24 @@ export default function ComingSoon() {
           gap: 9,
           padding: '8px 20px',
           borderRadius: 'var(--r-pill)',
-          background: 'rgba(227,174,78,0.12)',
-          border: '1px solid rgba(227,174,78,0.38)',
+          background: 'rgba(184,128,24,0.1)',
+          border: '1px solid rgba(184,128,24,0.3)',
           backdropFilter: 'blur(10px)',
           marginBottom: 24,
           position: 'relative',
           zIndex: 1,
+          boxShadow: '0 2px 8px rgba(184,128,24,0.08)',
         }}>
           <span style={{
             width: 8,
             height: 8,
             borderRadius: '50%',
             background: 'var(--gold)',
-            boxShadow: '0 0 12px var(--gold)',
+            boxShadow: '0 0 10px var(--gold)',
             animation: 'pulseDot 2s infinite',
           }} />
           <span style={{
-            font: '700 12px/1 var(--sans)',
+            font: '800 12px/1 var(--sans)',
             letterSpacing: '0.14em',
             textTransform: 'uppercase',
             color: 'var(--gold-soft)',
@@ -124,7 +125,7 @@ export default function ComingSoon() {
         }}>
           Authentic Dum Biryani,<br />
           Crafted for <span style={{
-            background: 'linear-gradient(135deg, var(--gold-soft), var(--gold))',
+            background: 'linear-gradient(135deg, var(--gold-soft), var(--gold-top))',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
           }}>Bhubaneswar</span>.
@@ -135,7 +136,7 @@ export default function ComingSoon() {
           font: '500 clamp(15px, 1.8vw, 17px)/1.65 var(--sans)',
           color: 'var(--text-70)',
           maxWidth: 640,
-          margin: '0 auto 32px',
+          margin: '0 auto 28px',
           position: 'relative',
           zIndex: 1,
         }}>
@@ -148,15 +149,16 @@ export default function ComingSoon() {
           display: 'inline-flex',
           alignItems: 'center',
           gap: 10,
-          padding: '10px 22px',
+          padding: '11px 24px',
           borderRadius: 'var(--r-lg)',
-          background: 'rgba(26,20,13,0.85)',
-          border: '1px solid rgba(227,174,78,0.25)',
+          background: 'var(--surface)',
+          border: '1px solid rgba(184,128,24,0.25)',
           color: 'var(--text-85)',
           font: '600 13px/1.4 var(--sans)',
           marginBottom: 32,
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
         }}>
-          <span style={{ color: 'var(--gold)' }}>⏳</span>
+          <span style={{ color: 'var(--gold)', fontSize: 16 }}>⏳</span>
           <span>Online ordering will go live on grand opening day. Follow our pages for the launch date!</span>
         </div>
 
@@ -203,10 +205,10 @@ export default function ComingSoon() {
         position: 'relative',
         borderRadius: 'var(--r-xxl)',
         overflow: 'hidden',
-        border: '1px solid rgba(227,174,78,0.25)',
+        border: '1px solid rgba(184,128,24,0.3)',
         background: 'var(--card)',
         marginBottom: 56,
-        boxShadow: '0 24px 60px rgba(0,0,0,0.6)',
+        boxShadow: '0 16px 40px rgba(0,0,0,0.12)',
       }}>
         <img
           src={heroImg}
@@ -216,7 +218,7 @@ export default function ComingSoon() {
         <div style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(0deg, rgba(11,9,6,0.95) 0%, rgba(11,9,6,0.4) 50%, rgba(11,9,6,0.1) 100%)',
+          background: 'linear-gradient(0deg, rgba(28,22,14,0.92) 0%, rgba(28,22,14,0.4) 50%, rgba(28,22,14,0.05) 100%)',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'flex-end',
@@ -224,24 +226,31 @@ export default function ComingSoon() {
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16 }}>
             <div>
-              <span className="eyebrow-gold" style={{ display: 'block', marginBottom: 6 }}>
+              <span style={{
+                display: 'block',
+                marginBottom: 6,
+                font: '700 11px/1 var(--sans)',
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                color: 'var(--gold-top)',
+              }}>
                 Zayra Biryani · Cloud Kitchen
               </span>
-              <h2 style={{ font: '400 clamp(24px, 3vw, 36px)/1.1 var(--serif)', color: 'var(--text)', margin: 0 }}>
+              <h2 style={{ font: '400 clamp(24px, 3vw, 36px)/1.1 var(--serif)', color: '#FFFFFF', margin: 0 }}>
                 Dough-Sealed Handi Dum
               </h2>
             </div>
             <div style={{
-              background: 'rgba(11,9,6,0.85)',
-              border: '1px solid rgba(227,174,78,0.3)',
+              background: 'rgba(28,22,14,0.85)',
+              border: '1px solid rgba(240,184,77,0.35)',
               borderRadius: 'var(--r-md)',
               padding: '10px 16px',
               backdropFilter: 'blur(8px)',
             }}>
-              <span style={{ font: '600 12px/1 var(--sans)', color: 'var(--gold-soft)', display: 'block' }}>
+              <span style={{ font: '700 12px/1 var(--sans)', color: 'var(--gold-top)', display: 'block' }}>
                 📍 Bhubaneswar, Odisha
               </span>
-              <span style={{ font: '500 11px/1.4 var(--sans)', color: 'var(--text-45)', display: 'block', marginTop: 4 }}>
+              <span style={{ font: '500 11px/1.4 var(--sans)', color: 'rgba(255,255,255,0.7)', display: 'block', marginTop: 4 }}>
                 Coming Soon
               </span>
             </div>
@@ -252,7 +261,7 @@ export default function ComingSoon() {
       {/* ── SOCIAL COMMUNITY SPOTLIGHT ── */}
       <section style={{ marginBottom: 56 }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <span className="eyebrow-gold" style={{ letterSpacing: '0.2em' }}>Connect With Us</span>
+          <span className="eyebrow-gold">Connect With Us</span>
           <h2 style={{ font: '400 clamp(26px, 3.5vw, 38px)/1.15 var(--serif)', color: 'var(--text)', margin: '8px 0' }}>
             Follow Our Official Channels
           </h2>
@@ -274,22 +283,23 @@ export default function ComingSoon() {
               rel="noopener noreferrer"
               className="card"
               style={{
-                padding: '24px',
+                padding: '26px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 textDecoration: 'none',
                 background: item.bgGradient,
                 borderColor: item.border,
+                boxShadow: '0 6px 20px rgba(0,0,0,0.03)',
                 transition: 'transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = `0 16px 36px ${item.border}`;
+                e.currentTarget.style.boxShadow = `0 12px 28px rgba(0,0,0,0.08)`;
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.03)';
               }}
             >
               <div>
@@ -298,22 +308,24 @@ export default function ComingSoon() {
                     width: 44,
                     height: 44,
                     borderRadius: 'var(--r-md)',
-                    background: 'rgba(0,0,0,0.4)',
+                    background: 'var(--surface)',
                     border: `1px solid ${item.border}`,
                     color: item.color,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
                   }}>
                     {item.icon}
                   </div>
                   <span style={{
                     font: '700 11px var(--sans)',
                     color: item.color,
-                    background: 'rgba(0,0,0,0.5)',
+                    background: 'var(--surface)',
                     padding: '4px 10px',
                     borderRadius: 'var(--r-pill)',
                     border: `1px solid ${item.border}`,
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.03)',
                   }}>
                     {item.name}
                   </span>
@@ -330,9 +342,9 @@ export default function ComingSoon() {
               <div style={{
                 marginTop: 20,
                 paddingTop: 14,
-                borderTop: '1px solid rgba(246,238,225,0.08)',
+                borderTop: '1px solid rgba(28,22,14,0.06)',
                 font: '700 12.5px var(--sans)',
-                color: 'var(--gold-soft)',
+                color: item.color,
                 display: 'flex',
                 alignItems: 'center',
                 gap: 6,
@@ -346,13 +358,14 @@ export default function ComingSoon() {
 
       {/* ── EARLY ACCESS / VIP NOTIFY ── */}
       <section style={{
-        background: 'linear-gradient(135deg, rgba(227,174,78,0.12), rgba(26,20,13,0.95))',
-        border: '1px solid rgba(227,174,78,0.3)',
+        background: 'linear-gradient(135deg, rgba(240,184,77,0.14), rgba(255,255,255,0.98))',
+        border: '1px solid rgba(184,128,24,0.3)',
         borderRadius: 'var(--r-xxl)',
         padding: 'clamp(28px, 4vw, 44px)',
         marginBottom: 56,
         position: 'relative',
         overflow: 'hidden',
+        boxShadow: '0 10px 30px rgba(184,128,24,0.08)',
       }}>
         <div style={{ maxWidth: 620, margin: '0 auto', textAlign: 'center' }}>
           <span className="eyebrow-gold">Inaugural Launch Perk</span>
@@ -366,12 +379,12 @@ export default function ComingSoon() {
 
           {submitted ? (
             <div style={{
-              background: 'rgba(78,154,107,0.15)',
-              border: '1px solid rgba(78,154,107,0.4)',
+              background: 'rgba(46,125,50,0.08)',
+              border: '1px solid rgba(46,125,50,0.3)',
               borderRadius: 'var(--r-lg)',
               padding: '18px 24px',
-              color: '#8FD3A6',
-              font: '600 14px var(--sans)',
+              color: 'var(--veg)',
+              font: '700 14px var(--sans)',
             }}>
               ✨ Thank you! You are on our Bhubaneswar VIP list. We will message you on launch day!
             </div>
@@ -387,12 +400,13 @@ export default function ComingSoon() {
                   flex: '1 1 260px',
                   maxWidth: 360,
                   height: 50,
-                  background: 'rgba(11,9,6,0.85)',
-                  border: '1px solid var(--gold-line-50)',
+                  background: 'var(--surface)',
+                  border: '1px solid rgba(184,128,24,0.4)',
                   borderRadius: 'var(--r-lg)',
                   padding: '0 16px',
                   color: 'var(--text)',
                   font: '600 14px var(--sans)',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
                 }}
               />
               <button
@@ -406,7 +420,7 @@ export default function ComingSoon() {
           )}
 
           <div style={{ marginTop: 20, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
-            <span style={{ font: '500 12px var(--sans)', color: 'var(--text-45)' }}>
+            <span style={{ font: '500 12px var(--sans)', color: 'var(--text-55)' }}>
               🔒 No spam. Only official launch notification & voucher.
             </span>
           </div>

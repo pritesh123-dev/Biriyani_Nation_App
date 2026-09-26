@@ -1,44 +1,43 @@
 /*
- * Same palette as the React Native app (src/theme.ts there) — kept in
- * sync by eye since the two projects don't share a build step. If you
- * change a color here, change it there too.
+ * Zayra Biryani — Royal Light Theme Design System
+ * Curated warm ivory, royal saffron amber gold, deep espresso typography.
  */
 :root {
-  --bg: #0B0906;
-  --surface: #100C07;
-  --card: #1A140D;
-  --card-alt: #15110B;
-  --well: #241C12;
-  --chip: #2C2318;
+  --bg: #FAF7F2;
+  --surface: #FFFFFF;
+  --card: #FFFFFF;
+  --card-alt: #F7F2E9;
+  --well: #F0E8DA;
+  --chip: #EAE0D0;
 
-  --gold: #E3AE4E;
-  --gold-soft: #F3D79B;
-  --gold-top: #F0C066;
-  --gold-bottom: #DE9F35;
-  --on-gold: #241905;
+  --gold: #B88018;
+  --gold-soft: #996508;
+  --gold-top: #F0B84D;
+  --gold-bottom: #D49520;
+  --on-gold: #FFFFFF;
 
-  --cream: #F6EEE1;
-  --veg: #4E9A6B;
-  --non-veg: #C0453A;
+  --cream: #1C160E;
+  --veg: #2E7D32;
+  --non-veg: #C62828;
   --whatsapp: #25603F;
   --whatsapp-fg: #EAFBF0;
 
-  --text: #F6EEE1;
-  --text-85: rgba(246, 238, 225, 0.85);
-  --text-70: rgba(246, 238, 225, 0.70);
-  --text-55: rgba(246, 238, 225, 0.55);
-  --text-45: rgba(246, 238, 225, 0.45);
-  --text-35: rgba(246, 238, 225, 0.35);
-  --text-30: rgba(246, 238, 225, 0.30);
+  --text: #1C160E;
+  --text-85: rgba(28, 22, 14, 0.88);
+  --text-70: rgba(28, 22, 14, 0.72);
+  --text-55: rgba(28, 22, 14, 0.58);
+  --text-45: rgba(28, 22, 14, 0.46);
+  --text-35: rgba(28, 22, 14, 0.35);
+  --text-30: rgba(28, 22, 14, 0.30);
 
-  --hair: rgba(246, 238, 225, 0.08);
-  --hair-soft: rgba(246, 238, 225, 0.06);
-  --border: rgba(246, 238, 225, 0.14);
-  --gold-line: rgba(227, 174, 78, 0.24);
-  --gold-line-50: rgba(227, 174, 78, 0.5);
-  --gold-wash: rgba(227, 174, 78, 0.12);
-  --gold-wash-16: rgba(227, 174, 78, 0.16);
-  --non-veg-wash: rgba(192, 69, 58, 0.16);
+  --hair: rgba(28, 22, 14, 0.08);
+  --hair-soft: rgba(28, 22, 14, 0.05);
+  --border: rgba(28, 22, 14, 0.12);
+  --gold-line: rgba(184, 128, 24, 0.28);
+  --gold-line-50: rgba(184, 128, 24, 0.48);
+  --gold-wash: rgba(184, 128, 24, 0.08);
+  --gold-wash-16: rgba(184, 128, 24, 0.14);
+  --non-veg-wash: rgba(198, 40, 40, 0.12);
 
   --serif: 'Instrument Serif', Georgia, serif;
   --sans: 'Manrope', system-ui, -apple-system, sans-serif;
@@ -50,7 +49,7 @@
   --r-xxl: 22px;
   --r-pill: 999px;
 
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 * { box-sizing: border-box; }
@@ -94,12 +93,17 @@ img { max-width: 100%; display: block; }
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 14px 30px rgba(227, 174, 78, 0.22);
-  transition: filter 0.15s;
+  box-shadow: 0 10px 24px rgba(184, 128, 24, 0.26);
+  transition: filter 0.15s, transform 0.15s, box-shadow 0.15s;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
-.gold-btn:hover { filter: brightness(1.06); }
+.gold-btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(184, 128, 24, 0.32);
+}
 .gold-btn:disabled {
-  background: rgba(246, 238, 225, 0.1);
+  background: rgba(28, 22, 14, 0.08);
   color: var(--text-35);
   box-shadow: none;
   cursor: not-allowed;
@@ -109,17 +113,25 @@ img { max-width: 100%; display: block; }
   height: 50px;
   border-radius: var(--r-lg);
   border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-85);
+  background: var(--surface);
+  color: var(--text);
   font: 700 13.5px/1 var(--sans);
   cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  transition: border-color 0.15s, transform 0.15s, background-color 0.15s;
 }
-.ghost-btn:hover { border-color: var(--gold-line-50); }
+.ghost-btn:hover {
+  border-color: var(--gold);
+  background: var(--card-alt);
+  color: var(--gold-soft);
+  transform: translateY(-1px);
+}
 
 .card {
   background: var(--card);
   border-radius: var(--r-xl);
   border: 1px solid var(--hair);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
 .eyebrow {
@@ -130,7 +142,7 @@ img { max-width: 100%; display: block; }
 }
 
 .eyebrow-gold {
-  font: 600 10px/1 var(--sans);
+  font: 700 11px/1 var(--sans);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--gold);
@@ -164,8 +176,7 @@ img { max-width: 100%; display: block; }
 .spin { animation: spin 0.8s linear infinite; }
 
 @keyframes pulseDot {
-  0% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 0 0 rgba(227, 174, 78, 0.7); }
-  70% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 0 8px rgba(227, 174, 78, 0); }
-  100% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 0 0 rgba(227, 174, 78, 0); }
+  0% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 0 0 rgba(184, 128, 24, 0.7); }
+  70% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 0 8px rgba(184, 128, 24, 0); }
+  100% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 0 0 rgba(184, 128, 24, 0); }
 }
-
