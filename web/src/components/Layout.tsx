@@ -9,66 +9,74 @@ export default function Layout() {
       minHeight: '100vh',
       display: 'flex',
       flexDirection: 'column',
-      background: 'radial-gradient(1200px 720px at 78% -12%, rgba(240,184,77,.18), transparent 65%), var(--bg)',
+      background: 'var(--bg)',
     }}>
+      {/* ── GLOBAL TOP NAV (Starbucks 3-Layer Shadow Standard) ── */}
       <header style={{
         position: 'sticky',
         top: 0,
-        zIndex: 30,
-        background: 'rgba(250, 247, 242, 0.88)',
-        backdropFilter: 'blur(16px)',
-        borderBottom: '1px solid rgba(184, 128, 24, 0.16)',
-        boxShadow: '0 2px 14px rgba(0, 0, 0, 0.03)',
+        zIndex: 40,
+        background: '#ffffff',
+        boxShadow: 'var(--shadow-nav)',
+        height: '76px',
+        display: 'flex',
+        alignItems: 'center',
       }}>
         <div style={{
-          maxWidth: 1120,
+          width: '100%',
+          maxWidth: 1240,
           margin: '0 auto',
-          padding: '14px clamp(16px,3vw,32px)',
+          padding: '0 clamp(16px, 3.5vw, 40px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 16,
         }}>
+          {/* Brand Logo */}
           <Link to="/" style={{
-            font: '400 clamp(22px,2.6vw,30px)/1 "Instrument Serif",serif',
-            color: 'var(--text)',
-            letterSpacing: '.4px',
-            whiteSpace: 'nowrap',
-            flex: 'none',
+            font: '700 clamp(20px, 2.4vw, 24px)/1 var(--sans)',
+            letterSpacing: '-0.02em',
+            color: 'var(--green-house)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
           }}>
-            Zayra<span style={{ color: 'var(--gold)' }}>Biryani</span>
+            <span>Zayra</span>
+            <span style={{ color: 'var(--green-starbucks)' }}>Biryani</span>
           </Link>
 
+          {/* Right Action Cluster */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span style={{
-              font: '700 11.5px/1 var(--sans)',
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: 'var(--gold)',
-              background: 'rgba(184, 128, 24, 0.1)',
-              border: '1px solid rgba(184, 128, 24, 0.25)',
+              font: '700 12px/1 var(--sans)',
+              letterSpacing: '-0.01em',
+              color: 'var(--green-starbucks)',
+              background: 'var(--green-light)',
               padding: '6px 14px',
               borderRadius: 'var(--r-pill)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
             }}>
-              📍 Bhubaneswar
+              <span style={{
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                background: 'var(--green-accent)',
+                animation: 'pulseDot 2s infinite',
+              }} />
+              Bhubaneswar
             </span>
 
             <a
               href="https://www.instagram.com/zayrabiryani/"
               target="_blank"
               rel="noopener noreferrer"
+              className="btn-outlined-green"
               style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '7px 14px',
-                borderRadius: 'var(--r-pill)',
-                background: 'linear-gradient(135deg, rgba(225,48,108,0.1), rgba(131,58,180,0.1))',
-                border: '1px solid rgba(225,48,108,0.28)',
-                color: '#C13584',
-                font: '700 12px Manrope,sans-serif',
-                textDecoration: 'none',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+                height: 38,
+                padding: '0 16px',
+                fontSize: 13.5,
               }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -82,18 +90,11 @@ export default function Layout() {
               href="https://www.youtube.com/@Zayra-Biryani"
               target="_blank"
               rel="noopener noreferrer"
+              className="btn-primary-green"
               style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '7px 14px',
-                borderRadius: 'var(--r-pill)',
-                background: 'rgba(255,0,0,0.08)',
-                border: '1px solid rgba(255,0,0,0.25)',
-                color: '#D32F2F',
-                font: '700 12px Manrope,sans-serif',
-                textDecoration: 'none',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+                height: 38,
+                padding: '0 16px',
+                fontSize: 13.5,
               }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -106,48 +107,96 @@ export default function Layout() {
         </div>
       </header>
 
+      {/* ── MAIN CONTENT ── */}
       <main style={{ flex: 1, minWidth: 0 }}>
         <Outlet />
       </main>
 
+      {/* ── HOUSE GREEN FOOTER (DESIGN.md Section 1 & 2 Standard) ── */}
       <footer style={{
-        borderTop: '1px solid var(--hair)',
-        padding: '32px clamp(16px,3vw,32px) 44px',
-        textAlign: 'center',
-        font: '500 12.5px Manrope,sans-serif',
-        color: 'var(--text-55)',
-        background: 'var(--surface)',
+        background: 'var(--green-house)',
+        color: 'var(--text-white)',
+        padding: 'clamp(40px, 6vw, 64px) clamp(16px, 3.5vw, 40px) 48px',
+        marginTop: 'auto',
       }}>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 18, marginBottom: 14, flexWrap: 'wrap' }}>
-          <a
-            href="https://www.instagram.com/zayrabiryani/"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: 'var(--text-70)', font: '700 12px Manrope,sans-serif', display: 'inline-flex', alignItems: 'center', gap: 5 }}
-          >
-            Instagram
-          </a>
-          <span style={{ color: 'var(--hair)' }}>•</span>
-          <a
-            href="https://www.youtube.com/@Zayra-Biryani"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: 'var(--text-70)', font: '700 12px Manrope,sans-serif', display: 'inline-flex', alignItems: 'center', gap: 5 }}
-          >
-            YouTube
-          </a>
-          <span style={{ color: 'var(--hair)' }}>•</span>
-          <a
-            href="https://www.facebook.com/people/Zayra-Biryani/61594579809671/"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: 'var(--text-70)', font: '700 12px Manrope,sans-serif', display: 'inline-flex', alignItems: 'center', gap: 5 }}
-          >
-            Facebook
-          </a>
-        </div>
-        <div>
-          {config?.brand.name ?? 'Zayra Biryani'} · Bhubaneswar, Odisha · Opening Soon · Pickup only
+        <div style={{ maxWidth: 1240, margin: '0 auto' }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 24,
+            paddingBottom: 32,
+            borderBottom: '1px solid rgba(255, 255, 255, 0.15)',
+          }}>
+            <div>
+              <span style={{
+                font: '700 22px/1 var(--sans)',
+                color: '#ffffff',
+                letterSpacing: '-0.02em',
+                display: 'block',
+              }}>
+                Zayra <span style={{ color: 'var(--gold)' }}>Biryani</span>
+              </span>
+              <span style={{
+                font: '400 14px/1.5 var(--sans)',
+                color: 'var(--text-white-soft)',
+                display: 'block',
+                marginTop: 6,
+              }}>
+                Authentic Dum-Cooked Handi · Bhubaneswar, Odisha
+              </span>
+            </div>
+
+            {/* Social Links on Dark Green Footer */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+              <a
+                href="https://www.instagram.com/zayrabiryani/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outlined-white"
+                style={{ height: 38, padding: '0 18px', fontSize: 13 }}
+              >
+                Instagram
+              </a>
+              <a
+                href="https://www.youtube.com/@Zayra-Biryani"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outlined-white"
+                style={{ height: 38, padding: '0 18px', fontSize: 13 }}
+              >
+                YouTube
+              </a>
+              <a
+                href="https://www.facebook.com/people/Zayra-Biryani/61594579809671/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outlined-white"
+                style={{ height: 38, padding: '0 18px', fontSize: 13 }}
+              >
+                Facebook
+              </a>
+            </div>
+          </div>
+
+          <div style={{
+            marginTop: 24,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 12,
+            font: '400 13px/1.5 var(--sans)',
+            color: 'var(--text-white-soft)',
+          }}>
+            <div>
+              © {new Date().getFullYear()} {config?.brand.name ?? 'Zayra Biryani'}. All rights reserved.
+            </div>
+            <div style={{ color: 'var(--gold)' }}>
+              Opening Soon for Counter Pickup & Pre-orders
+            </div>
+          </div>
         </div>
       </footer>
     </div>

@@ -11,9 +11,7 @@ export default function ComingSoon() {
       handle: '@zayrabiryani',
       desc: 'Behind-the-scenes dum handis, daily reels & launch giveaways.',
       url: 'https://www.instagram.com/zayrabiryani/',
-      color: '#C13584',
-      bgGradient: 'linear-gradient(135deg, rgba(225,48,108,0.08), rgba(131,58,180,0.06))',
-      border: 'rgba(225,48,108,0.22)',
+      color: '#00754A',
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
@@ -21,38 +19,34 @@ export default function ComingSoon() {
           <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
         </svg>
       ),
-      actionText: 'Follow on Instagram →',
+      badgeText: 'Follow us',
     },
     {
       name: 'YouTube',
       handle: '@Zayra-Biryani',
       desc: 'Watch our slow dum-cooking methods, spice blends & kitchen stories.',
       url: 'https://www.youtube.com/@Zayra-Biryani',
-      color: '#D32F2F',
-      bgGradient: 'linear-gradient(135deg, rgba(255,0,0,0.08), rgba(200,20,20,0.05))',
-      border: 'rgba(211,47,47,0.22)',
+      color: '#00754A',
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
           <polygon points="10 15 15 12 10 9 10 15" fill="currentColor" />
         </svg>
       ),
-      actionText: 'Subscribe on YouTube →',
+      badgeText: 'Subscribe',
     },
     {
       name: 'Facebook',
       handle: 'Zayra Biryani',
       desc: 'Join our Bhubaneswar foodie circle for events, launch dates & catering.',
       url: 'https://www.facebook.com/people/Zayra-Biryani/61594579809671/',
-      color: '#1877F2',
-      bgGradient: 'linear-gradient(135deg, rgba(24,119,242,0.08), rgba(15,80,180,0.05))',
-      border: 'rgba(24,119,242,0.22)',
+      color: '#00754A',
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
         </svg>
       ),
-      actionText: 'Connect on Facebook →',
+      badgeText: 'Connect',
     },
   ];
 
@@ -63,121 +57,91 @@ export default function ComingSoon() {
   };
 
   return (
-    <div style={{ maxWidth: 1120, margin: '0 auto', padding: 'clamp(24px, 4vw, 56px) clamp(16px, 3vw, 32px) 80px' }}>
-      
-      {/* ── HERO BANNER ── */}
-      <section style={{ textAlign: 'center', marginBottom: 52, position: 'relative' }}>
-        
-        {/* Glow ambient circle */}
-        <div style={{
-          position: 'absolute',
-          top: '-40px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: 'clamp(280px, 60vw, 540px)',
-          height: '240px',
-          background: 'radial-gradient(circle, rgba(240,184,77,0.28) 0%, rgba(240,184,77,0) 70%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }} />
-
+    <div>
+      {/* ── 1. WARM CREAM HERO (DESIGN.md Section 1 Standard) ── */}
+      <section style={{
+        padding: 'clamp(40px, 6vw, 72px) clamp(16px, 3.5vw, 40px) 48px',
+        maxWidth: 1240,
+        margin: '0 auto',
+        textAlign: 'center',
+      }}>
         {/* Status indicator badge */}
         <div style={{
           display: 'inline-flex',
           alignItems: 'center',
-          gap: 9,
-          padding: '8px 20px',
+          gap: 8,
+          padding: '6px 18px',
           borderRadius: 'var(--r-pill)',
-          background: 'rgba(184,128,24,0.1)',
-          border: '1px solid rgba(184,128,24,0.3)',
-          backdropFilter: 'blur(10px)',
+          background: 'var(--green-light)',
+          color: 'var(--green-starbucks)',
           marginBottom: 24,
-          position: 'relative',
-          zIndex: 1,
-          boxShadow: '0 2px 8px rgba(184,128,24,0.08)',
         }}>
           <span style={{
-            width: 8,
-            height: 8,
+            width: 7,
+            height: 7,
             borderRadius: '50%',
-            background: 'var(--gold)',
-            boxShadow: '0 0 10px var(--gold)',
+            background: 'var(--green-accent)',
             animation: 'pulseDot 2s infinite',
           }} />
-          <span style={{
-            font: '800 12px/1 var(--sans)',
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            color: 'var(--gold-soft)',
-          }}>
-            📍 Opening Soon in Bhubaneswar
+          <span style={{ font: '700 12.5px/1 var(--sans)', letterSpacing: '-0.01em' }}>
+            Opening Soon in Bhubaneswar
           </span>
         </div>
 
-        {/* Grand Headline */}
+        {/* Primary Heading */}
         <h1 style={{
-          font: '400 clamp(38px, 6.2vw, 70px)/1.06 var(--serif)',
-          color: 'var(--text)',
-          margin: '0 auto 20px',
-          maxWidth: 840,
-          position: 'relative',
-          zIndex: 1,
+          font: '600 clamp(36px, 5.5vw, 64px)/1.15 var(--sans)',
+          letterSpacing: '-0.02em',
+          color: 'var(--green-starbucks)',
+          margin: '0 auto 18px',
+          maxWidth: 820,
         }}>
           Authentic Dum Biryani,<br />
-          Crafted for <span style={{
-            background: 'linear-gradient(135deg, var(--gold-soft), var(--gold-top))',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}>Bhubaneswar</span>.
+          <span style={{ color: 'var(--green-house)' }}>Crafted for Bhubaneswar.</span>
         </h1>
 
         {/* Subtitle */}
         <p style={{
-          font: '500 clamp(15px, 1.8vw, 17px)/1.65 var(--sans)',
-          color: 'var(--text-70)',
+          font: '400 clamp(16px, 1.8vw, 19px)/1.65 var(--sans)',
+          color: 'var(--text-black-soft)',
           maxWidth: 640,
           margin: '0 auto 28px',
-          position: 'relative',
-          zIndex: 1,
+          letterSpacing: '-0.01em',
         }}>
           Sealed under dough in heavy handis, slow-cooked for 45 minutes with aged basmati, 
-          pure ghee, and aromatic spices. Our kitchen is getting ready for counter pickup & pre-orders.
+          pure ghee, and aromatic spices. Fresh, piping hot pickup from our Bhubaneswar kitchen.
         </p>
 
-        {/* Notice badge stating ordering will open soon */}
+        {/* Informational Store Status Card */}
         <div style={{
           display: 'inline-flex',
           alignItems: 'center',
           gap: 10,
-          padding: '11px 24px',
-          borderRadius: 'var(--r-lg)',
-          background: 'var(--surface)',
-          border: '1px solid rgba(184,128,24,0.25)',
-          color: 'var(--text-85)',
-          font: '600 13px/1.4 var(--sans)',
+          padding: '12px 24px',
+          borderRadius: 'var(--r-card)',
+          background: '#ffffff',
+          boxShadow: 'var(--shadow-card)',
+          color: 'var(--text-black)',
+          font: '600 13.5px/1.4 var(--sans)',
           marginBottom: 32,
-          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
         }}>
-          <span style={{ color: 'var(--gold)', fontSize: 16 }}>⏳</span>
+          <span style={{ color: 'var(--green-accent)', fontSize: 16 }}>⏳</span>
           <span>Online ordering will go live on grand opening day. Follow our pages for the launch date!</span>
         </div>
 
-        {/* Action Social Buttons */}
+        {/* Dual 50px Full-Pill CTAs */}
         <div style={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           gap: 14,
           flexWrap: 'wrap',
-          position: 'relative',
-          zIndex: 1,
         }}>
           <a
             href="https://www.instagram.com/zayrabiryani/"
             target="_blank"
             rel="noopener noreferrer"
-            className="gold-btn"
-            style={{ padding: '0 28px', height: 50, fontSize: 14.5 }}
+            className="btn-primary-green"
           >
             Follow on Instagram
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -189,8 +153,7 @@ export default function ComingSoon() {
             href="https://www.youtube.com/@Zayra-Biryani"
             target="_blank"
             rel="noopener noreferrer"
-            className="ghost-btn"
-            style={{ padding: '0 24px', height: 50, display: 'inline-flex', alignItems: 'center', gap: 8 }}
+            className="btn-outlined-green"
           >
             Subscribe on YouTube
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -200,80 +163,259 @@ export default function ComingSoon() {
         </div>
       </section>
 
-      {/* ── PHOTO SHOWCASE HERO ── */}
-      <div style={{
-        position: 'relative',
-        borderRadius: 'var(--r-xxl)',
-        overflow: 'hidden',
-        border: '1px solid rgba(184,128,24,0.3)',
-        background: 'var(--card)',
-        marginBottom: 56,
-        boxShadow: '0 16px 40px rgba(0,0,0,0.12)',
+      {/* ── 2. HOUSE GREEN FEATURE BAND (DESIGN.md Section 4 & 9 Standard) ── */}
+      <section style={{
+        background: 'var(--green-house)',
+        color: 'var(--text-white)',
+        padding: 'clamp(48px, 6vw, 72px) clamp(16px, 3.5vw, 40px)',
+        margin: '16px 0 56px',
       }}>
-        <img
-          src={heroImg}
-          alt="Zayra Biryani Bhubaneswar"
-          style={{ width: '100%', maxHeight: 420, objectFit: 'cover', display: 'block' }}
-        />
         <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(0deg, rgba(28,22,14,0.92) 0%, rgba(28,22,14,0.4) 50%, rgba(28,22,14,0.05) 100%)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'flex-end',
-          padding: 'clamp(20px, 3.5vw, 36px)',
+          maxWidth: 1240,
+          margin: '0 auto',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+          gap: 'clamp(32px, 5vw, 64px)',
+          alignItems: 'center',
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16 }}>
-            <div>
-              <span style={{
-                display: 'block',
-                marginBottom: 6,
-                font: '700 11px/1 var(--sans)',
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-                color: 'var(--gold-top)',
-              }}>
-                Zayra Biryani · Cloud Kitchen
-              </span>
-              <h2 style={{ font: '400 clamp(24px, 3vw, 36px)/1.1 var(--serif)', color: '#FFFFFF', margin: 0 }}>
-                Dough-Sealed Handi Dum
-              </h2>
-            </div>
-            <div style={{
-              background: 'rgba(28,22,14,0.85)',
-              border: '1px solid rgba(240,184,77,0.35)',
-              borderRadius: 'var(--r-md)',
-              padding: '10px 16px',
-              backdropFilter: 'blur(8px)',
+          {/* Left Column: Headline + Copy + Inverted Buttons */}
+          <div>
+            <span style={{
+              font: '700 12px/1 var(--sans)',
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              color: 'var(--gold)',
+              display: 'block',
+              marginBottom: 12,
             }}>
-              <span style={{ font: '700 12px/1 var(--sans)', color: 'var(--gold-top)', display: 'block' }}>
-                📍 Bhubaneswar, Odisha
-              </span>
-              <span style={{ font: '500 11px/1.4 var(--sans)', color: 'rgba(255,255,255,0.7)', display: 'block', marginTop: 4 }}>
-                Coming Soon
-              </span>
+              The Bhubaneswar Cloud Kitchen
+            </span>
+            <h2 style={{
+              font: '600 clamp(28px, 4vw, 44px)/1.15 var(--sans)',
+              letterSpacing: '-0.02em',
+              color: '#ffffff',
+              margin: '0 0 18px',
+            }}>
+              Dough-Sealed Dum Cooking.<br />Zero Compromise.
+            </h2>
+            <p style={{
+              font: '400 clamp(15px, 1.6vw, 17px)/1.65 var(--sans)',
+              color: 'var(--text-white-soft)',
+              margin: '0 0 28px',
+            }}>
+              Nothing sits pre-cooked. Every single pot is layered with aged long-grain basmati, 
+              marinated cuts, and sealed under fresh dough to lock in the aroma for 45 minutes of slow dum.
+            </p>
+
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <a
+                href="https://www.instagram.com/zayrabiryani/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-inverted-white"
+              >
+                Explore Reels & BTS
+              </a>
+              <a
+                href="https://www.facebook.com/people/Zayra-Biryani/61594579809671/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outlined-white"
+              >
+                Join Community
+              </a>
+            </div>
+          </div>
+
+          {/* Right Column: Photography Card */}
+          <div style={{
+            borderRadius: 'var(--r-card)',
+            overflow: 'hidden',
+            boxShadow: '0 12px 32px rgba(0,0,0,0.3)',
+            background: '#000000',
+            position: 'relative',
+          }}>
+            <img
+              src={heroImg}
+              alt="Zayra Biryani Bhubaneswar"
+              style={{ width: '100%', maxHeight: 380, objectFit: 'cover', display: 'block' }}
+            />
+            <div style={{
+              position: 'absolute',
+              bottom: 16,
+              left: 16,
+              background: 'rgba(30, 57, 50, 0.92)',
+              backdropFilter: 'blur(8px)',
+              padding: '8px 16px',
+              borderRadius: 'var(--r-pill)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              color: '#ffffff',
+              font: '700 12px var(--sans)',
+            }}>
+              📍 Bhubaneswar · Counter Pickup
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* ── SOCIAL COMMUNITY SPOTLIGHT ── */}
-      <section style={{ marginBottom: 56 }}>
-        <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <span className="eyebrow-gold">Connect With Us</span>
-          <h2 style={{ font: '400 clamp(26px, 3.5vw, 38px)/1.15 var(--serif)', color: 'var(--text)', margin: '8px 0' }}>
-            Follow Our Official Channels
+      {/* ── 3. CRAFT HIGHLIGHTS (DESIGN.md 12px Cards with Whisper Shadows) ── */}
+      <section style={{
+        maxWidth: 1240,
+        margin: '0 auto 64px',
+        padding: '0 clamp(16px, 3.5vw, 40px)',
+      }}>
+        <div style={{ textAlign: 'center', marginBottom: 36 }}>
+          <span style={{
+            font: '700 11.5px/1 var(--sans)',
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            color: 'var(--green-starbucks)',
+            display: 'block',
+            marginBottom: 8,
+          }}>
+            Pure Retail Kitchen Craft
+          </span>
+          <h2 style={{
+            font: '600 clamp(26px, 3.5vw, 36px)/1.2 var(--sans)',
+            letterSpacing: '-0.02em',
+            color: 'var(--text-black)',
+            margin: 0,
+          }}>
+            Why Zayra Biryani Tastes Different
           </h2>
-          <p style={{ font: '500 14px var(--sans)', color: 'var(--text-55)', maxWidth: 520, margin: '0 auto' }}>
-            Stay updated with launch dates, kitchen behind-the-scenes, food trials, and inaugural launch offers.
-          </p>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+          gap: 20,
+        }}>
+          <div className="card-standard" style={{ padding: '28px' }}>
+            <div style={{
+              width: 44,
+              height: 44,
+              borderRadius: 'var(--r-pill)',
+              background: 'var(--green-light)',
+              color: 'var(--green-starbucks)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 20,
+              marginBottom: 16,
+            }}>
+              🏺
+            </div>
+            <h3 style={{ font: '600 18px var(--sans)', color: 'var(--text-black)', margin: '0 0 8px' }}>
+              Dough-Sealed Handis
+            </h3>
+            <p style={{ font: '400 14px/1.6 var(--sans)', color: 'var(--text-black-soft)', margin: 0 }}>
+              Every single handi is sealed with dough, locking essential spice aromatics and steam inside.
+            </p>
+          </div>
+
+          <div className="card-standard" style={{ padding: '28px' }}>
+            <div style={{
+              width: 44,
+              height: 44,
+              borderRadius: 'var(--r-pill)',
+              background: 'var(--green-light)',
+              color: 'var(--green-starbucks)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 20,
+              marginBottom: 16,
+            }}>
+              🌾
+            </div>
+            <h3 style={{ font: '600 18px var(--sans)', color: 'var(--text-black)', margin: '0 0 8px' }}>
+              Aged Basmati & Pure Ghee
+            </h3>
+            <p style={{ font: '400 14px/1.6 var(--sans)', color: 'var(--text-black-soft)', margin: 0 }}>
+              Extra-long fragrant grains that stay separate and light, cooked in pure desi ghee without artificial essences.
+            </p>
+          </div>
+
+          <div className="card-standard" style={{ padding: '28px' }}>
+            <div style={{
+              width: 44,
+              height: 44,
+              borderRadius: 'var(--r-pill)',
+              background: 'var(--green-light)',
+              color: 'var(--green-starbucks)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 20,
+              marginBottom: 16,
+            }}>
+              ⚡
+            </div>
+            <h3 style={{ font: '600 18px var(--sans)', color: 'var(--text-black)', margin: '0 0 8px' }}>
+              Pre-Order & Hot Pickup
+            </h3>
+            <p style={{ font: '400 14px/1.6 var(--sans)', color: 'var(--text-black-soft)', margin: 0 }}>
+              Order ahead when we launch, receive a pickup code, and collect your steaming hot handi right on arrival.
+            </p>
+          </div>
+
+          <div className="card-standard" style={{ padding: '28px' }}>
+            <div style={{
+              width: 44,
+              height: 44,
+              borderRadius: 'var(--r-pill)',
+              background: 'var(--gold-lightest)',
+              color: 'var(--gold)',
+              border: '1px solid var(--gold)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 20,
+              marginBottom: 16,
+            }}>
+              ★
+            </div>
+            <h3 style={{ font: '600 18px var(--sans)', color: 'var(--text-black)', margin: '0 0 8px' }}>
+              Biryani Coins Rewards
+            </h3>
+            <p style={{ font: '400 14px/1.6 var(--sans)', color: 'var(--text-black-soft)', margin: 0 }}>
+              Earn coins on every order. Redeem 200 coins for a complimentary Mini Dum Handi on the house.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 4. OFFICIAL SOCIAL COMMUNITY (DESIGN.md 3-Up Cards) ── */}
+      <section style={{
+        maxWidth: 1240,
+        margin: '0 auto 64px',
+        padding: '0 clamp(16px, 3.5vw, 40px)',
+      }}>
+        <div style={{ textAlign: 'center', marginBottom: 36 }}>
+          <span style={{
+            font: '700 11.5px/1 var(--sans)',
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            color: 'var(--green-starbucks)',
+            display: 'block',
+            marginBottom: 8,
+          }}>
+            Official Pages
+          </span>
+          <h2 style={{
+            font: '600 clamp(26px, 3.5vw, 36px)/1.2 var(--sans)',
+            letterSpacing: '-0.02em',
+            color: 'var(--text-black)',
+            margin: 0,
+          }}>
+            Join the Zayra Biryani Community
+          </h2>
         </div>
 
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))',
-          gap: 18,
+          gap: 20,
         }}>
           {socialLinks.map((item) => (
             <a
@@ -281,25 +423,13 @@ export default function ComingSoon() {
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="card"
+              className="card-standard"
               style={{
-                padding: '26px',
+                padding: '28px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 textDecoration: 'none',
-                background: item.bgGradient,
-                borderColor: item.border,
-                boxShadow: '0 6px 20px rgba(0,0,0,0.03)',
-                transition: 'transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = `0 12px 28px rgba(0,0,0,0.08)`;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.03)';
               }}
             >
               <div>
@@ -307,34 +437,30 @@ export default function ComingSoon() {
                   <div style={{
                     width: 44,
                     height: 44,
-                    borderRadius: 'var(--r-md)',
-                    background: 'var(--surface)',
-                    border: `1px solid ${item.border}`,
+                    borderRadius: 'var(--r-card)',
+                    background: 'var(--green-light)',
                     color: item.color,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
                   }}>
                     {item.icon}
                   </div>
                   <span style={{
-                    font: '700 11px var(--sans)',
-                    color: item.color,
-                    background: 'var(--surface)',
-                    padding: '4px 10px',
+                    font: '700 12px var(--sans)',
+                    color: 'var(--green-starbucks)',
+                    background: 'var(--green-light)',
+                    padding: '4px 12px',
                     borderRadius: 'var(--r-pill)',
-                    border: `1px solid ${item.border}`,
-                    boxShadow: '0 1px 4px rgba(0,0,0,0.03)',
                   }}>
                     {item.name}
                   </span>
                 </div>
 
-                <h3 style={{ font: '700 18px var(--sans)', color: 'var(--text)', margin: '0 0 6px' }}>
+                <h3 style={{ font: '700 18px var(--sans)', color: 'var(--text-black)', margin: '0 0 6px' }}>
                   {item.handle}
                 </h3>
-                <p style={{ font: '500 13px/1.55 var(--sans)', color: 'var(--text-70)', margin: 0 }}>
+                <p style={{ font: '400 14px/1.55 var(--sans)', color: 'var(--text-black-soft)', margin: 0 }}>
                   {item.desc}
                 </p>
               </div>
@@ -342,147 +468,120 @@ export default function ComingSoon() {
               <div style={{
                 marginTop: 20,
                 paddingTop: 14,
-                borderTop: '1px solid rgba(28,22,14,0.06)',
-                font: '700 12.5px var(--sans)',
-                color: item.color,
+                borderTop: '1px solid rgba(0,0,0,0.06)',
+                font: '700 13px var(--sans)',
+                color: 'var(--green-accent)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 6,
               }}>
-                {item.actionText}
+                {item.badgeText} →
               </div>
             </a>
           ))}
         </div>
       </section>
 
-      {/* ── EARLY ACCESS / VIP NOTIFY ── */}
+      {/* ── 5. VIP LAUNCH PERK BAND (DESIGN.md Gold Lightest #faf6ee Wash) ── */}
       <section style={{
-        background: 'linear-gradient(135deg, rgba(240,184,77,0.14), rgba(255,255,255,0.98))',
-        border: '1px solid rgba(184,128,24,0.3)',
-        borderRadius: 'var(--r-xxl)',
-        padding: 'clamp(28px, 4vw, 44px)',
-        marginBottom: 56,
-        position: 'relative',
-        overflow: 'hidden',
-        boxShadow: '0 10px 30px rgba(184,128,24,0.08)',
+        maxWidth: 1240,
+        margin: '0 auto 80px',
+        padding: '0 clamp(16px, 3.5vw, 40px)',
       }}>
-        <div style={{ maxWidth: 620, margin: '0 auto', textAlign: 'center' }}>
-          <span className="eyebrow-gold">Inaugural Launch Perk</span>
-          <h2 style={{ font: '400 clamp(26px, 3.5vw, 36px)/1.15 var(--serif)', color: 'var(--text)', margin: '8px 0 12px' }}>
-            Be the First to Taste in Bhubaneswar
-          </h2>
-          <p style={{ font: '500 14px/1.6 var(--sans)', color: 'var(--text-70)', marginBottom: 28 }}>
-            Drop your mobile number to receive an exclusive VIP invite on opening day, 
-            along with <strong>₹100 launch voucher</strong> and surprise opening-day Biryani Coins.
-          </p>
-
-          {submitted ? (
-            <div style={{
-              background: 'rgba(46,125,50,0.08)',
-              border: '1px solid rgba(46,125,50,0.3)',
-              borderRadius: 'var(--r-lg)',
-              padding: '18px 24px',
-              color: 'var(--veg)',
-              font: '700 14px var(--sans)',
-            }}>
-              ✨ Thank you! You are on our Bhubaneswar VIP list. We will message you on launch day!
-            </div>
-          ) : (
-            <form onSubmit={handleNotify} style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
-              <input
-                type="tel"
-                placeholder="Enter your 10-digit mobile number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                maxLength={13}
-                style={{
-                  flex: '1 1 260px',
-                  maxWidth: 360,
-                  height: 50,
-                  background: 'var(--surface)',
-                  border: '1px solid rgba(184,128,24,0.4)',
-                  borderRadius: 'var(--r-lg)',
-                  padding: '0 16px',
-                  color: 'var(--text)',
-                  font: '600 14px var(--sans)',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                }}
-              />
-              <button
-                type="submit"
-                className="gold-btn"
-                style={{ height: 50, padding: '0 24px', flex: 'none', fontSize: 13.5 }}
-              >
-                Get Launch Invite
-              </button>
-            </form>
-          )}
-
-          <div style={{ marginTop: 20, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
-            <span style={{ font: '500 12px var(--sans)', color: 'var(--text-55)' }}>
-              🔒 No spam. Only official launch notification & voucher.
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* ── KITCHEN CRAFT & HIGHLIGHTS ── */}
-      <section style={{ marginBottom: 32 }}>
-        <div style={{ textAlign: 'center', marginBottom: 28 }}>
-          <span className="eyebrow-gold">What Makes Zayra Special</span>
-          <h2 style={{ font: '400 clamp(24px, 3vw, 34px)/1.15 var(--serif)', color: 'var(--text)', margin: '6px 0 0' }}>
-            The Bhubaneswar Dum Kitchen
-          </h2>
-        </div>
-
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-          gap: 16,
+          background: 'var(--gold-lightest)',
+          border: '1px solid rgba(203, 162, 88, 0.4)',
+          borderRadius: 'var(--r-card)',
+          boxShadow: 'var(--shadow-card)',
+          padding: 'clamp(32px, 5vw, 56px)',
+          textAlign: 'center',
         }}>
-          <div className="card" style={{ padding: '24px' }}>
-            <div style={{ fontSize: 28, marginBottom: 12 }}>🏺</div>
-            <h3 style={{ font: '700 16px var(--sans)', color: 'var(--text)', margin: '0 0 8px' }}>
-              Dough-Sealed Handis
-            </h3>
-            <p style={{ font: '500 13px/1.6 var(--sans)', color: 'var(--text-55)', margin: 0 }}>
-              Every single pot is covered with a dough seal, trapping steam and essential spice aromatics inside during slow cooking.
+          <div style={{ maxWidth: 640, margin: '0 auto' }}>
+            <span className="pill-gold-badge" style={{ marginBottom: 14 }}>
+              ★ Inaugural Launch Perk
+            </span>
+            <h2 style={{
+              font: '600 clamp(26px, 3.5vw, 36px)/1.2 var(--sans)',
+              letterSpacing: '-0.02em',
+              color: 'var(--text-black)',
+              margin: '8px 0 12px',
+            }}>
+              Be the First to Taste in Bhubaneswar
+            </h2>
+            <p style={{
+              font: '400 15px/1.65 var(--sans)',
+              color: 'var(--text-black-soft)',
+              marginBottom: 28,
+            }}>
+              Enter your mobile number to receive an opening day VIP invite, 
+              a <strong>₹100 inaugural voucher</strong>, and early-bird Biryani Coins.
             </p>
-          </div>
 
-          <div className="card" style={{ padding: '24px' }}>
-            <div style={{ fontSize: 28, marginBottom: 12 }}>🌾</div>
-            <h3 style={{ font: '700 16px var(--sans)', color: 'var(--text)', margin: '0 0 8px' }}>
-              Aged Basmati & Desi Ghee
-            </h3>
-            <p style={{ font: '500 13px/1.6 var(--sans)', color: 'var(--text-55)', margin: 0 }}>
-              Extra-long grains that stay separate, fragrant, and light on the stomach without greasy food coloring or artificial essences.
-            </p>
-          </div>
+            {submitted ? (
+              <div style={{
+                background: 'var(--green-light)',
+                border: '1px solid var(--green-accent)',
+                borderRadius: 'var(--r-pill)',
+                padding: '16px 28px',
+                color: 'var(--green-starbucks)',
+                font: '700 14px var(--sans)',
+              }}>
+                ✨ Thank you! You are on our Bhubaneswar VIP list. We will notify you on launch day!
+              </div>
+            ) : (
+              <form onSubmit={handleNotify} style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
+                <input
+                  type="tel"
+                  placeholder="Enter 10-digit mobile number"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  maxLength={13}
+                  style={{
+                    flex: '1 1 260px',
+                    maxWidth: 360,
+                    height: 48,
+                    background: '#ffffff',
+                    border: '1px solid var(--input-border)',
+                    borderRadius: 'var(--r-pill)',
+                    padding: '0 20px',
+                    color: 'var(--text-black)',
+                    font: '600 14.5px var(--sans)',
+                    outline: 'none',
+                  }}
+                  onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--green-accent)')}
+                  onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--input-border)')}
+                />
+                <button
+                  type="submit"
+                  className="btn-primary-green"
+                  style={{ height: 48, padding: '0 28px' }}
+                >
+                  Get Launch Invite
+                </button>
+              </form>
+            )}
 
-          <div className="card" style={{ padding: '24px' }}>
-            <div style={{ fontSize: 28, marginBottom: 12 }}>⚡</div>
-            <h3 style={{ font: '700 16px var(--sans)', color: 'var(--text)', margin: '0 0 8px' }}>
-              Pre-Order & Hot Pickup
-            </h3>
-            <p style={{ font: '500 13px/1.6 var(--sans)', color: 'var(--text-55)', margin: 0 }}>
-              Once open, order from your phone, get a 4-letter pickup code, and collect your steaming hot handi right from our counter in minutes.
-            </p>
-          </div>
-
-          <div className="card" style={{ padding: '24px' }}>
-            <div style={{ fontSize: 28, marginBottom: 12 }}>🪙</div>
-            <h3 style={{ font: '700 16px var(--sans)', color: 'var(--text)', margin: '0 0 8px' }}>
-              Biryani Coins Program
-            </h3>
-            <p style={{ font: '500 13px/1.6 var(--sans)', color: 'var(--text-55)', margin: 0 }}>
-              Earn coins on every single order. Collect 200 coins and get a full Mini Dum Handi free on the house.
-            </p>
+            <div style={{ marginTop: 18, font: '400 12px var(--sans)', color: 'var(--text-black-soft)' }}>
+              🔒 No spam. Only official opening day invite and voucher.
+            </div>
           </div>
         </div>
       </section>
 
+      {/* ── 6. FLOATING FRAP CIRCULAR ORDER CTA (DESIGN.md Section 4 & 9) ── */}
+      <a
+        href="https://www.instagram.com/zayrabiryani/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="frap-floating-btn"
+        title="Follow Zayra Biryani on Instagram"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+          <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+        </svg>
+      </a>
     </div>
   );
 }
