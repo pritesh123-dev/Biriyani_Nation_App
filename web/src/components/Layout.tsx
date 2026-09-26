@@ -125,7 +125,7 @@ export default function Layout() {
           </a>
         </div>
         <div>
-          {config?.brand.name ?? 'Zayra Biryani'} · {config?.store.addressLine1 ?? 'Patia Square, Bhubaneswar'} · Opening in Bhubaneswar · pickup only
+          {config?.brand.name ?? 'Zayra Biryani'} · Bhubaneswar, Odisha · Opening Soon · Pickup only
         </div>
       </footer>
     </div>

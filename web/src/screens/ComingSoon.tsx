@@ -242,7 +242,7 @@ export default function ComingSoon() {
                 📍 Bhubaneswar, Odisha
               </span>
               <span style={{ font: '500 11px/1.4 var(--sans)', color: 'var(--text-45)', display: 'block', marginTop: 4 }}>
-                Patia Square · Counter Pickup & Pre-orders
+                Coming Soon
               </span>
             </div>
           </div>
